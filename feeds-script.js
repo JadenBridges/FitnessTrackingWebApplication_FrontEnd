@@ -8,19 +8,7 @@ $(document).ready(function() {
             success: function(response) {
                 // for each group received
                 for(const item of response) {
-                    // create a new html element
-                    let new_group_option = $("<option></option>");
-                    new_group_option.text(item.groupID.toString());
-                    new_group_option.id = "group-option-" + item.groupID.toString();
-                    // add it to the selector
-                    $("#page-selector").append(new_group_option);
-
-                    // create a new div that the posts can be placed into
-                    let new_group_div = $("<group></group>");
-                    new_group_div.text("Group " + item.groupID.toString()); // temporary
-                    new_group_div.attr("id","group-div-" + item.groupID.toString());
-                    new_group_div.hide();
-                    $("body").append(new_group_div);
+                    addGroupToFeeds(item.groupID);
                 }
             },
             error: function() {
@@ -113,7 +101,24 @@ $(document).ready(function() {
         $.post('/groupfeed/create?userID=' + userID,
             function(data, status) {
                 console.log("New group: " + data);
+                addGroupToFeeds(data);
             });
     });
+
+    function addGroupToFeeds(groupID) {
+        // create a new html element
+        let new_group_option = $("<option></option>");
+        new_group_option.text(groupID.toString());
+        new_group_option.id = "group-option-" + groupID.toString();
+        // add it to the selector
+        $("#page-selector").append(new_group_option);
+
+        // create a new div that the posts can be placed into
+        let new_group_div = $("<group></group>");
+        new_group_div.text("Group " + groupID.toString()); // temporary
+        new_group_div.attr("id","group-div-" + groupID.toString());
+        new_group_div.hide();
+        $("body").append(new_group_div);
+    }
 
 });
