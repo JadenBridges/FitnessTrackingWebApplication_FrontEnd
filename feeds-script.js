@@ -36,6 +36,8 @@ $(document).ready(function() {
         console.log(selectedIndex);
         if(selectedIndex == "0") {
             $("#individual-posts").show();
+            var ind_posts = document.getElementById("individual-posts");
+            ind_posts.innerHTML = "";
             getIndividualPosts();
         }
         else {
@@ -105,6 +107,7 @@ $(document).ready(function() {
                 }
             });
     }
+
     // create a new group
     $("#new-group-button").click(function(){
         $.post('/groupfeed/create?userID=' + userID,
