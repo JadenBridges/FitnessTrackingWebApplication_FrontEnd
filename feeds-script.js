@@ -22,13 +22,13 @@ $(document).ready(function() {
                     new_group_div.hide();
                     $("body").append(new_group_div);
                 }
-
             },
             error: function() {
                 alert("Error");
             }
         });
 
+    // select a feed to view
     $("#feed-button").click(function(){
         $("group").hide();
         // if individual feed selected
@@ -98,39 +98,19 @@ $(document).ready(function() {
                         $("#post-div-" + _post.post.postID.toString()).append(text_break);
                         text_break = $("<br>");
                         $("#post-div-" + _post.post.postID.toString()).append(text_break);
-
                     }
-
-                    // for(const item of posts[postID].post.activity)
-                    // {
-                    //     alert("HELLO");
-                    //     if(!(index == 0 || index == 1))
-                    //     {
-                    //         alert("YOU IN");
-                    //         let new_activity_item = $("<label></label>");
-                    //         if(typeof stringValue)
-                    //         {
-                    //             new_activity_item.text(descriptors[index - 2] + element);
-                    //         }
-                    //         else
-                    //         {
-                    //             new_activity_item.text(descriptors[index - 2] + element.toString());
-                    //         }
-                    //         new_activity_item.attr("id","activity-item-" + (index - 2).toString())
-                    //         $("#post-div-" + postID).append(new_activity_item);
-                    //     }
-                    // }
-                    // "Title: " + posts[postID].post.activity.title  +
-                    // "Description: " + posts[postID].post.activity.description +
-                    // "Distance: " + posts[postID].post.activity.distance.toString() +
-                    // "Hours: " + posts[postID].post.activity.hours.toString() +
-                    // "Minutes: " + posts[postID].post.activity.minutes.toString() +
-                    // "Seconds: " + posts[postID].post.activity.seconds.toString() +
-                    // "Likes: " + posts[postID].post.likes.toString() );
                 },
                 error: function() {
                     alert("Error");
                 }
             });
     }
+    // create a new group
+    $("#new-group-button").click(function(){
+        $.post('/groupfeed/create?userID=' + userID,
+            function(data, status) {
+                console.log("New group: " + data);
+            });
+    });
+
 });
