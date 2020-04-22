@@ -22,13 +22,13 @@ $(document).ready(function() {
                     new_group_div.hide();
                     $("body").append(new_group_div);
                 }
-
             },
             error: function() {
                 alert("Error");
             }
         });
 
+    // select a feed to view
     $("#feed-button").click(function(){
         $("group").hide();
         // if individual feed selected
@@ -42,4 +42,13 @@ $(document).ready(function() {
             $("#group-div-"+groupID).show();
         }
     });
+
+    // create a new group
+    $("#new-group-button").click(function(){
+        $.post('/groupfeed/create?userID=' + userID,
+            function(data, status) {
+                console.log("New group: " + data);
+            });
+    });
+
 });
