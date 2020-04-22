@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="en-us">
+<html lang="en-us" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Feeds</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-    <script src="feeds-script.js"></script>
+<!--    <script src="feeds-script.js"></script>-->
 </head>
 <body>
 <form>
@@ -25,6 +25,24 @@
 <div id="group-2-posts">
     <p>Group 2</p>
 </div>
+
+<script>
+    var userID = '1';
+
+    $(document).ready(function() {
+
+        $.ajax('/groupfeed/getgroups?userID=' + userID,
+            {
+                success: function(got) {
+                    alert("Success: " + JSON.stringify(got));
+                },
+                error: function() {
+                    alert("Error");
+                }
+            })
+    });
+
+</script>
 
 </body>
 </html>
