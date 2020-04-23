@@ -1,6 +1,6 @@
 $(document).ready(function() {
 
-    var url = "https://localhost:8080";
+    const url = "https://localhost:8080";
 
     $(".ui.warning.message").hide();
     $(".ui.positive.message").hide();
@@ -16,6 +16,7 @@ $(document).ready(function() {
     $("#signUpButton").click(function(){
         if($("#signUpName").val() == "" || $("#signUpPass").val() == ""){
             $("#signUpWarning").show();
+            $("#signUpWarning").delay(3000).fadeOut();
         } else {
             let data = {username: $("#signUpName").val(), password : $("#signUpPass").val()};
             $.ajax({
@@ -26,6 +27,7 @@ $(document).ready(function() {
                 success: function(msg) {
                     if(msg == -1){
                         $("#usernameTaken").show();
+                        $("#usernameTaken").delay(3000).fadeOut();
                         $("#signUpName").val("");
                         $("#signUpPass").val("");
                     }else{
@@ -33,6 +35,7 @@ $(document).ready(function() {
                         $("#signUpPass").val("");
                         $('.ui.modal').modal('hide');
                         $("#signUpSuccess").show();
+                        $("#signUpSuccess").delay(3000).fadeOut();
                     }
                 }
             });
@@ -40,7 +43,22 @@ $(document).ready(function() {
     });
 
     $("#loginButton").click(function(){
-        console.log("Here");
-        $("#loginWarning").show();
+        let data = {username: $("#loginName").val(), password : $("#loginPass").val()};
+
+        $.ajax({
+            type: "GET",
+            url: url + "/user/login",
+            data: data,
+            dataType: "json",
+            success: function(msg) {
+                console.log(msg);
+                if(msg == -1){
+                    $("#loginWarning").show();
+                    $("#loginWarning").delay(3000).fadeOut();
+                } else{
+                    document.location.href = url + "/feeds?userID=" + msg;
+                }
+            }
+        });
     });
 });
