@@ -37,7 +37,7 @@
 <!-- Create Activity Modal-->
 <div class="ui modal" id="createActivityModal">
     <i class="close icon"></i>
-    <div class="header">
+    <div class="header" id="activityModalHeader">
         Create Activity
     </div>
     <!-- Warning-->
@@ -51,6 +51,7 @@
     <!--Activity Creation Success-->
     <div class="ui positive message" id="createActivitySuccess">
         <i class="close icon"></i>
+        <span style="display: none;" id="getActivityID"></span>
         <div class="header">
             Activity Created!
         </div>
