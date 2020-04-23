@@ -17,6 +17,7 @@
 
 <!--Hidden span used to getUserID-->
 <span style="display: none;" id="getUserID" th:text="${userID}"></span>
+<!--Menu-->
 <div class = "ui  menu">
     <div class = "active item">
         <select class = "ui dropdown" id="page-selector" name="pages">
@@ -24,16 +25,24 @@
             <i> class = "dropdown icon"</i>
         </select>
 
+<!--Create new group button-->
     </div>
     <div class = "item">
         <button class = "ui primary button" id="new-group-button">Create new group</button>
     </div><br>
 
-
     <!-- Create Activity Button -->
     <div class = "item">
         <div class="ui primary button" id="createActivityLink">Create Activity</div>
     </div>
+
+<!--    Logout Button-->
+    <div class = "right menu">
+        <div class = "item">
+            <button class="ui button" id="logoutButton">Logout</button>
+        </div>
+    </div>
+
 </div>
 <group id="individual-posts" style="display: none;"></group>
 <!-- Create Activity Modal-->
