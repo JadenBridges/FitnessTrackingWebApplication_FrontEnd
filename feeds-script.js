@@ -157,12 +157,34 @@ $(document).ready(function() {
 
                         new_activity_label = $("<label></label>");
                         new_activity_label.text("Likes: " + _post.post.likes.toString());
-                        new_activity_label.attr("id", "post-label-likes");
+                        new_activity_label.attr("id", "post-label-likes-i" + _post.post.postID.toString());
                         $("#post-div-" + _post.post.postID.toString()).append(new_activity_label);
 
                         text_break = $("<br>");
                         $("#post-div-" + _post.post.postID.toString()).append(text_break);
-                        text_break = $("<br>");
+
+                        var like_button = $("<button></button>");
+                        like_button.text("Like");
+                        like_button.attr("id", "like-button-" + _post.post.postID.toString());
+
+                        like_button.click(function() {
+                            $.ajax({
+                                url: '/individualfeed/like-post?postID=' + _post.post.postID,
+                                method: 'PUT',
+                                success: function(val) {
+                                    alert("You liked your post!");
+                                    document.getElementById("post-label-likes-i"
+                                        + _post.post.postID.toString()).innerHTML = "Likes: " + val;
+                                },
+                                error: function() {
+                                    alert("Error in liking post");
+                                }
+                            })
+                        });
+
+                        $("#post-div-" + _post.post.postID.toString()).append(like_button);
+
+                        text_break = $("<br><br>");
                         $("#post-div-" + _post.post.postID.toString()).append(text_break);
                     }
                 },
@@ -189,15 +211,10 @@ $(document).ready(function() {
                                 success: function(response) {
                                     var uname = "";
                                     let new_activity_label = $("<h2></h2>");
-                                    console.log("line 147: " + response);
                                     uname = response;
-                                    console.log("line 154");
                                     new_activity_label.text(uname + " posted");
                                     new_activity_label.attr("id", "post-user");
                                     $("#g-" + groupID + "-" + "post-div-" + _post.post.postID.toString()).append(new_activity_label);
-
-                                    let text_break = $("<br>");
-                                    $("#g-" + groupID + "-" + "post-div-" + _post.post.postID.toString()).append(text_break);
 
                                     new_activity_label = $("<label></label>");
                                     new_activity_label.text("Title: " + _post.post.activity.title);
@@ -235,12 +252,33 @@ $(document).ready(function() {
 
                                     new_activity_label = $("<label></label>");
                                     new_activity_label.text("Likes: " + _post.post.likes.toString());
-                                    new_activity_label.attr("id", "post-label-likes");
+                                    new_activity_label.attr("id", "post-label-likes-g" + _post.post.postID.toString());
                                     $("#g-" + groupID + "-" + "post-div-" + _post.post.postID.toString()).append(new_activity_label);
 
                                     text_break = $("<br>");
                                     $("#g-" + groupID + "-" + "post-div-" + _post.post.postID.toString()).append(text_break);
-                                    text_break = $("<br>");
+
+                                    var like_button = $("<button></button>");
+                                    like_button.text("Like");
+                                    like_button.attr("id", "like-button-" + _post.post.postID.toString());
+
+                                    like_button.click(function() {
+                                       $.ajax({
+                                           url: '/groupfeed/like-post?postID=' + _post.post.postID,
+                                           method: 'PUT',
+                                           success: function(val) {
+                                               alert("You liked " + uname + "'s post!");
+                                               document.getElementById("post-label-likes-g"
+                                                   + _post.post.postID.toString()).innerHTML = "Likes: " + val;
+                                           },
+                                           error: function() {
+                                               alert("Error in liking post");
+                                           }
+                                       })
+                                    });
+                                    $("#g-" + groupID + "-" + "post-div-" + _post.post.postID.toString()).append(like_button);
+
+                                    text_break = $("<br><br>");
                                     $("#g-" + groupID + "-" + "post-div-" + _post.post.postID.toString()).append(text_break);
                                 },
                                 error: function() {
