@@ -7,6 +7,8 @@ $(document).ready(function() {
     $(".ui.positive.message").hide();
 
     const userID = $("#getUserID").text();
+    getIndividualPosts();
+    $("#individual-posts").show();
 
     // create elements for adding and deleting users and hide them
     createAddDeleteUserElements();
@@ -93,7 +95,7 @@ $(document).ready(function() {
         });
 
     // select a feed to view
-    $("#feed-button").click(function () {
+    $("#page-selector").change(function () {
         // hide any elements for add or delete user
         $("#username-field").hide();
         $("#add-user-button").hide();
