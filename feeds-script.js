@@ -37,38 +37,40 @@ $(document).ready(function() {
             success: function(response) {
                 console.log(userID);
                 // for each group received
-                for(const item of response) {
+                for (const item of response) {
                     addGroupToFeeds(item.groupID);
                 }
             },
-            error: function() {
+            error: function () {
                 alert("Error");
             }
         });
 
     // select a feed to view
-    $("#feed-button").click(function(){
+    $("#feed-button").click(function () {
         $("group").hide();
         // if individual feed selected
         let selectedIndex = document.getElementById("page-selector").selectedIndex;
         console.log(selectedIndex);
-        if(selectedIndex == "0") {
+        if (selectedIndex == "0") {
             $("#individual-posts").show();
             var ind_posts = document.getElementById("individual-posts");
             ind_posts.innerHTML = "";
             getIndividualPosts();
-        }
-        else {
+        } else {
             let groupID = document.getElementById("page-selector").options[selectedIndex].text;
-            $("#group-div-"+groupID).show();
+            $("#group-div-" + groupID).show();
+            var group_posts = document.getElementById("group-div-" + groupID);
+            group_posts.innerHTML = "";
+            getGroupPosts(groupID);
+
         }
     });
 
-    function getIndividualPosts()
-    {
+    function getIndividualPosts() {
         $.ajax('/individualfeed/get?userID=' + userID,
             {
-                success: function(posts) {
+                success: function (posts) {
                     for (const _post of posts) {
                         // create a new div that a single post can be placed into
                         let new_post_div = $("<post></post>");
@@ -120,7 +122,69 @@ $(document).ready(function() {
                         $("#post-div-" + _post.post.postID.toString()).append(text_break);
                     }
                 },
-                error: function() {
+                error: function () {
+                    alert("Error");
+                }
+            });
+    }
+
+    function getGroupPosts(groupID)
+    {
+        $.ajax('/groupfeed/get?groupID=' + groupID,
+            {
+                success: function (posts) {
+                    for (const _post of posts) {
+                        // create a new div that a single post can be placed into
+                        let new_post_div = $("<post></post>");
+                        new_post_div.attr("id", "g-" + groupID + "-" + "post-div-" + _post.post.postID.toString());
+                        $("#group-div-" + groupID).append(new_post_div);
+
+                        let new_activity_label = $("<label></label>");
+                        new_activity_label.text("Title: " + _post.post.activity.title);
+                        new_activity_label.attr("id", "activity-label-title");
+                        $("#g-" + groupID + "-" + "post-div-" + _post.post.postID.toString()).append(new_activity_label);
+
+                        let text_break = $("<br>");
+                        $("#g-" + groupID + "-" + "post-div-" + _post.post.postID.toString()).append(text_break);
+
+                        new_activity_label = $("<label></label>");
+                        new_activity_label.text("Description: " + _post.post.activity.description);
+                        new_activity_label.attr("id", "activity-label-description");
+                        $("#g-" + groupID + "-" + "post-div-" + _post.post.postID.toString()).append(new_activity_label);
+
+                        text_break = $("<br>");
+                        $("#g-" + groupID + "-" + "post-div-" + _post.post.postID.toString()).append(text_break);
+
+                        new_activity_label = $("<label></label>");
+                        new_activity_label.text("Distance: " + _post.post.activity.distance.toString());
+                        new_activity_label.attr("id", "activity-label-distance");
+                        $("#g-" + groupID + "-" + "post-div-" + _post.post.postID.toString()).append(new_activity_label);
+
+                        text_break = $("<br>");
+                        $("#g-" + groupID + "-" + "post-div-" + _post.post.postID.toString()).append(text_break);
+
+                        new_activity_label = $("<label></label>");
+                        new_activity_label.text("Time Elapsed: " + _post.post.activity.hours.toString() + ":" +
+                            _post.post.activity.minutes.toString() + ":" +
+                            _post.post.activity.seconds.toString());
+                        new_activity_label.attr("id", "activity-label-time_elapsed");
+                        $("#g-" + groupID + "-" + "post-div-" + _post.post.postID.toString()).append(new_activity_label);
+
+                        text_break = $("<br>");
+                        $("#g-" + groupID + "-" + "post-div-" + _post.post.postID.toString()).append(text_break);
+
+                        new_activity_label = $("<label></label>");
+                        new_activity_label.text("Likes: " + _post.post.likes.toString());
+                        new_activity_label.attr("id", "post-label-likes");
+                        $("#g-" + groupID + "-" + "post-div-" + _post.post.postID.toString()).append(new_activity_label);
+
+                        text_break = $("<br>");
+                        $("#g-" + groupID + "-" + "post-div-" + _post.post.postID.toString()).append(text_break);
+                        text_break = $("<br>");
+                        $("#g-" + groupID + "-" + "post-div-" + _post.post.postID.toString()).append(text_break);
+                    }
+                },
+                error: function () {
                     alert("Error");
                 }
             });
@@ -135,7 +199,7 @@ $(document).ready(function() {
             });
     });
 
-    function addGroupToFeeds(groupID) {
+    function addGroupToFeeds(groupID, ownerID) {
         // create a new html element
         let new_group_option = $("<option></option>");
         new_group_option.text(groupID.toString());
