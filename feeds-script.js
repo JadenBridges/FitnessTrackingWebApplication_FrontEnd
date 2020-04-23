@@ -1,3 +1,6 @@
+const groups_to_owners = new Map();
+const current_groupID = -1;
+
 $(document).ready(function() {
     const url = "https://localhost:8080";
     $(".ui.warning.message").hide();
@@ -38,7 +41,7 @@ $(document).ready(function() {
                 console.log(userID);
                 // for each group received
                 for (const item of response) {
-                    addGroupToFeeds(item.groupID);
+                    addGroupToFeeds(item.groupID, item.owner);
                 }
             },
             error: function () {
@@ -48,6 +51,11 @@ $(document).ready(function() {
 
     // select a feed to view
     $("#feed-button").click(function () {
+        // remove any elements for add or delete user
+        $("#username-field").remove();
+        $("#add-user-button").remove();
+        $("#delete-user-button").remove();
+        // hide all groups
         $("group").hide();
         // if individual feed selected
         let selectedIndex = document.getElementById("page-selector").selectedIndex;
@@ -64,6 +72,23 @@ $(document).ready(function() {
             group_posts.innerHTML = "";
             getGroupPosts(groupID);
 
+            // if user is the owner of this group, add elements to allow them to add and delete users
+            if(groups_to_owners.get(parseInt(groupID)) == userID) {
+                // field to enter username
+                let username_field = $("<input>");
+                username_field.attr("type", "text");
+                username_field.attr("id", "username-field");
+                // button to add user
+                let add_user_button = $("<button></button>");
+                add_user_button.attr("id", "add-user-button");
+                add_user_button.text("Add User");
+                // button to delete user
+                let delete_user_button = $("<button></button>");
+                delete_user_button.attr("id", "delete-user-button");
+                delete_user_button.text("Delete User");
+                // put into body
+                $("body").append(username_field, add_user_button, delete_user_button);
+            }
         }
     });
 
@@ -195,7 +220,7 @@ $(document).ready(function() {
         $.post('/groupfeed/create?userID=' + userID,
             function(data, status) {
                 console.log("New group: " + data);
-                addGroupToFeeds(data);
+                addGroupToFeeds(data, userID);
             });
     });
 
@@ -213,6 +238,9 @@ $(document).ready(function() {
         new_group_div.attr("id","group-div-" + groupID.toString());
         new_group_div.hide();
         $("body").append(new_group_div);
+
+        // update the groups and owners map
+        groups_to_owners.set(groupID, ownerID);
     }
 
 });
