@@ -16,6 +16,7 @@ $(document).ready(function() {
 
     // link to activity modal
     $("#createActivityLink").click(function(){
+        $("#activityDescription").val("");
         $("#createActivityModal").modal('show');
     });
 
@@ -63,8 +64,14 @@ $(document).ready(function() {
                     $("#warning").show();
                     $("#warning").delay(3000).fadeOut();
                 } else{
-                    $("#createActivitySuccess").show();
-                    $("#createActivitySuccess").delay(3000).fadeOut();
+                    $("#activityTitle").val("");
+                    $("#activityDescription").val("");
+                    $("#activityDistance").val("");
+                    $("#activityHours").val("");
+                    $("#activityMinutes").val("");
+                    $("#activitySeconds").val("");
+                    $('.ui.modal').modal('hide');
+                    alert("Actvity Created!");
                 }
             }
         });
