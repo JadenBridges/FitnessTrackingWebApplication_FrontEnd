@@ -121,20 +121,6 @@ $(document).ready(function() {
                 $("#username-field").show();
                 $("#add-user-button").show();
                 $("#delete-user-button").show();
-                // // field to enter username
-                // let username_field = $("<input>");
-                // username_field.attr("type", "text");
-                // username_field.attr("id", "username-field");
-                // // button to add user
-                // let add_user_button = $("<button></button>");
-                // add_user_button.attr("id", "add-user-button");
-                // add_user_button.text("Add User");
-                // // button to delete user
-                // let delete_user_button = $("<button></button>");
-                // delete_user_button.attr("id", "delete-user-button");
-                // delete_user_button.text("Delete User");
-                // // put into body
-                // $("body").append(username_field, add_user_button, delete_user_button);
             }
         }
     });
@@ -145,64 +131,49 @@ $(document).ready(function() {
                 success: function (posts) {
                     for (const _post of posts) {
                         // create a new div that a single post can be placed into
-                        let new_post_div = $("<post></post>");
+                        let new_post_div = $("<div class='content' style='border: 1px solid black; background-color: lightgray;'></div>");
                         new_post_div.attr("id", "post-div-" + _post.post.postID.toString());
                         $("#individual-posts").append(new_post_div);
 
-                        let new_activity_label = $("<label></label>");
-                        new_activity_label.text("Title: " + _post.post.activity.title);
+                        let new_activity_label = $("<div class='extra text' style='font-weight: bold;'></div>");
+                        new_activity_label.text(_post.post.activity.title);
                         new_activity_label.attr("id", "activity-label-title");
                         $("#post-div-" + _post.post.postID.toString()).append(new_activity_label);
 
-                        let text_break = $("<br>");
-                        $("#post-div-" + _post.post.postID.toString()).append(text_break);
-
-                        new_activity_label = $("<label></label>");
-                        new_activity_label.text("Description: " + _post.post.activity.description);
+                        new_activity_label = $("<div class='extra text'></div>");
+                        new_activity_label.text(_post.post.activity.description);
                         new_activity_label.attr("id", "activity-label-description");
                         $("#post-div-" + _post.post.postID.toString()).append(new_activity_label);
 
-                        text_break = $("<br>");
-                        $("#post-div-" + _post.post.postID.toString()).append(text_break);
-
-                        new_activity_label = $("<label></label>");
+                        new_activity_label = $("<div class='extra text'></div>");
                         new_activity_label.text("Distance: " + _post.post.activity.distance.toString());
                         new_activity_label.attr("id", "activity-label-distance");
                         $("#post-div-" + _post.post.postID.toString()).append(new_activity_label);
 
-                        text_break = $("<br>");
-                        $("#post-div-" + _post.post.postID.toString()).append(text_break);
-
-                        new_activity_label = $("<label></label>");
+                        new_activity_label = $("<div class='extra text'></div>");
                         new_activity_label.text("Time Elapsed: " + _post.post.activity.hours.toString() + ":" +
                             _post.post.activity.minutes.toString() + ":" +
                             _post.post.activity.seconds.toString());
                         new_activity_label.attr("id", "activity-label-time_elapsed");
                         $("#post-div-" + _post.post.postID.toString()).append(new_activity_label);
 
-                        text_break = $("<br>");
-                        $("#post-div-" + _post.post.postID.toString()).append(text_break);
+                        var like_span = $("<span style='white-space: nowrap;'></span>");
 
-                        new_activity_label = $("<label></label>");
-                        new_activity_label.text("Likes: " + _post.post.likes.toString());
+                        var like_button = $("<div class='meta' style='display: inline-block;'><a class='like'><i class='like icon red'></i></a></div>");
+                        like_button.attr("id","like-button-" + _post.post.postID.toString());
+
+                        new_activity_label = $("<label style='display: inline-block;'></label>");
+                        new_activity_label.text(_post.post.likes.toString());
                         new_activity_label.attr("id", "post-label-likes-i" + _post.post.postID.toString());
-                        $("#post-div-" + _post.post.postID.toString()).append(new_activity_label);
-
-                        text_break = $("<br>");
-                        $("#post-div-" + _post.post.postID.toString()).append(text_break);
-
-                        var like_button = $("<button></button>");
-                        like_button.text("Like");
-                        like_button.attr("id", "like-button-" + _post.post.postID.toString());
 
                         like_button.click(function() {
                             $.ajax({
                                 url: '/individualfeed/like-post?postID=' + _post.post.postID,
                                 method: 'PUT',
                                 success: function(val) {
-                                    alert("You liked your post!");
+                                    //alert("You liked your post!");
                                     document.getElementById("post-label-likes-i"
-                                        + _post.post.postID.toString()).innerHTML = "Likes: " + val;
+                                        + _post.post.postID.toString()).innerHTML = val.toString();
                                 },
                                 error: function() {
                                     alert("Error in liking post");
@@ -210,7 +181,12 @@ $(document).ready(function() {
                             })
                         });
 
-                        $("#post-div-" + _post.post.postID.toString()).append(like_button);
+                        like_span.append(like_button);
+                        like_span.append(new_activity_label);
+                        $("#post-div-" + _post.post.postID.toString()).append(like_span);
+
+                        let text_break = $("<br>");
+                        $("#post-div-" + _post.post.postID.toString()).append(text_break);
 
                         var delete_button = $("<button></button>");
                         delete_button.text("Delete Post");
