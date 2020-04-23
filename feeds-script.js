@@ -433,8 +433,8 @@ $(document).ready(function() {
     $("#new-group-button").click(function(){
         $.post('/groupfeed/create?userID=' + userID,
             function(data, status) {
-                console.log("New group: " + data);
                 addGroupToFeeds(data, userID);
+                alert("New group created: Group " + data.toString());
             });
     });
 
