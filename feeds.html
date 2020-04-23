@@ -7,35 +7,47 @@
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/fomantic-ui@2.8.4/dist/semantic.min.css">
     <script src="https://cdn.jsdelivr.net/npm/fomantic-ui@2.8.4/dist/semantic.min.js"></script>
     <script src="feeds-script.js"></script>
+
+    <h1 align="center" class="ui header">
+        <img src="../logo.png" class="ui circular image">
+        Fitness Tracker
+    </h1>
 </head>
 <body>
+
 <!--Hidden span used to getUserID-->
 <span style="display: none;" id="getUserID" th:text="${userID}"></span>
+<!--Menu-->
+<div class = "ui  menu">
+    <div class = "active item">
+        <select class = "ui dropdown" id="page-selector" name="pages">
+            <option value="individual-feed" id="individual-feed-option">Individual Feed</option>
+            <i> class = "dropdown icon"</i>
+        </select>
+<!--Create new group button-->
+    </div>
+    <div class = "item">
+        <button class = "ui primary button" id="new-group-button">Create new group</button>
+    </div><br>
 
-<div>
-    <button id="new-group-button">Create new group</button>
-</div><br>
-
-<div>
-    <select id="page-selector" name="pages">
-        <option value="individual-feed" id="individual-feed-option">Individual Feed</option>
-    </select>
-    <button id="feed-button">Go to feed</button>
-</div>
-
-<group id="individual-posts" style="display: none;"></group>
-
-<!-- Create Activity Button -->
-<footer class = "bottom">
-    <div class = "ui container">
+    <!-- Create Activity Button -->
+    <div class = "item">
         <div class="ui primary button" id="createActivityLink">Create Activity</div>
     </div>
-</footer>
 
+<!--    Logout Button-->
+    <div class = "right menu">
+        <div class = "item">
+            <button class="ui button" id="logoutButton">Logout</button>
+        </div>
+    </div>
+
+</div>
+<group id="individual-posts" style="display: none;"></group>
 <!-- Create Activity Modal-->
 <div class="ui modal" id="createActivityModal">
     <i class="close icon"></i>
-    <div class="header">
+    <div class="header" id="activityModalHeader">
         Create Activity
     </div>
     <!-- Warning-->
@@ -49,6 +61,7 @@
     <!--Activity Creation Success-->
     <div class="ui positive message" id="createActivitySuccess">
         <i class="close icon"></i>
+        <span style="display: none;" id="getActivityID"></span>
         <div class="header">
             Activity Created!
         </div>

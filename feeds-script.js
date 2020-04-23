@@ -7,6 +7,8 @@ $(document).ready(function() {
     $(".ui.positive.message").hide();
 
     const userID = $("#getUserID").text();
+    getIndividualPosts();
+    $("#individual-posts").show();
 
     // create elements for adding and deleting users and hide them
     createAddDeleteUserElements();
@@ -17,7 +19,13 @@ $(document).ready(function() {
     // link to activity modal
     $("#createActivityLink").click(function(){
         $("#activityDescription").val("");
+        $("#activityModalHeader").text("Create Activity");
+        $("#submitActivity").text("Submit Activity");
         $("#createActivityModal").modal('show');
+    });
+
+    $("#logoutButton").click(function(){
+        document.location.href = url + "/";
     });
 
     //link to summaryModal
@@ -25,7 +33,7 @@ $(document).ready(function() {
         var name = "";
         $.ajax({
             type: "GET",
-            url: url + "/user/getusername?userid=" + userID,
+            url: url + "/user/getusername?userID=" + userID,
             success: function(msg) {
                 $("#summaryHeader").text(msg + "\'s Achievement Summary");
                 $("#totalMileHead").text(msg + "\'s Total Mileage: ");
@@ -51,30 +59,58 @@ $(document).ready(function() {
 
     //create new activity
     $("#submitActivity").click(function(){
+        console.log("on submit " + $("#getActivityID").text());
         let data = {userID : userID,title: $("#activityTitle").val(), description : $("#activityDescription").val(), distance: $("#activityDistance").val(),
             hours: $("#activityHours").val(),minutes: $("#activityMinutes").val(),seconds: $("#activitySeconds").val()};
-        $.ajax({
-            type: "POST",
-            url: url + "/activity/create",
-            data: JSON.stringify(data),
-            dataType: "json",
-            contentType: "application/json; charset=utf-8",
-            success: function(msg) {
-                if(msg == -1){
-                    $("#warning").show();
-                    $("#warning").delay(3000).fadeOut();
-                } else{
-                    $("#activityTitle").val("");
-                    $("#activityDescription").val("");
-                    $("#activityDistance").val("");
-                    $("#activityHours").val("");
-                    $("#activityMinutes").val("");
-                    $("#activitySeconds").val("");
-                    $('.ui.modal').modal('hide');
-                    alert("Actvity Created!");
+        if($("#submitActivity").text() == "Submit Update"){
+            $.ajax({
+                type: "PUT",
+                url: url + "/activity/update?activityID=" + $("#getActivityID").text(),
+                data: JSON.stringify(data),
+                dataType: "json",
+                contentType: "application/json; charset=utf-8",
+                success: function(msg) {
+                    if(msg == -1){
+                        $("#warning").show();
+                        $("#warning").delay(3000).fadeOut();
+                    } else{
+                        $("#activityTitle").val("");
+                        $("#activityDescription").val("");
+                        $("#activityDistance").val("");
+                        $("#activityHours").val("");
+                        $("#activityMinutes").val("");
+                        $("#activitySeconds").val("");
+                        $("#activityModalHeader").text("Create Activity");
+                        $("#submitActivity").text("Submit Activity");
+                        $('.ui.modal').modal('hide');
+                        alert("Actvity Updated!");
+                    }
                 }
-            }
-        });
+            });
+        } else{
+            $.ajax({
+                type: "POST",
+                url: url + "/activity/create",
+                data: JSON.stringify(data),
+                dataType: "json",
+                contentType: "application/json; charset=utf-8",
+                success: function(msg) {
+                    if(msg == -1){
+                        $("#warning").show();
+                        $("#warning").delay(3000).fadeOut();
+                    } else{
+                        $("#activityTitle").val("");
+                        $("#activityDescription").val("");
+                        $("#activityDistance").val("");
+                        $("#activityHours").val("");
+                        $("#activityMinutes").val("");
+                        $("#activitySeconds").val("");
+                        $('.ui.modal').modal('hide');
+                        alert("Actvity Created!");
+                    }
+                }
+            });
+        }
     });
 
     // get the groups and populate the selector with them
@@ -93,7 +129,7 @@ $(document).ready(function() {
         });
 
     // select a feed to view
-    $("#feed-button").click(function () {
+    $("#page-selector").change(function () {
         // hide any elements for add or delete user
         $("#username-field").hide();
         $("#add-user-button").hide();
@@ -121,20 +157,6 @@ $(document).ready(function() {
                 $("#username-field").show();
                 $("#add-user-button").show();
                 $("#delete-user-button").show();
-                // // field to enter username
-                // let username_field = $("<input>");
-                // username_field.attr("type", "text");
-                // username_field.attr("id", "username-field");
-                // // button to add user
-                // let add_user_button = $("<button></button>");
-                // add_user_button.attr("id", "add-user-button");
-                // add_user_button.text("Add User");
-                // // button to delete user
-                // let delete_user_button = $("<button></button>");
-                // delete_user_button.attr("id", "delete-user-button");
-                // delete_user_button.text("Delete User");
-                // // put into body
-                // $("body").append(username_field, add_user_button, delete_user_button);
             }
         }
     });
@@ -145,64 +167,49 @@ $(document).ready(function() {
                 success: function (posts) {
                     for (const _post of posts) {
                         // create a new div that a single post can be placed into
-                        let new_post_div = $("<post></post>");
+                        let new_post_div = $("<div class='content' style='border: 1px solid black; background-color: lightgray;'></div>");
                         new_post_div.attr("id", "post-div-" + _post.post.postID.toString());
                         $("#individual-posts").append(new_post_div);
 
-                        let new_activity_label = $("<label></label>");
-                        new_activity_label.text("Title: " + _post.post.activity.title);
+                        let new_activity_label = $("<div class='extra text' style='font-weight: bold;'></div>");
+                        new_activity_label.text(_post.post.activity.title);
                         new_activity_label.attr("id", "activity-label-title");
                         $("#post-div-" + _post.post.postID.toString()).append(new_activity_label);
 
-                        let text_break = $("<br>");
-                        $("#post-div-" + _post.post.postID.toString()).append(text_break);
-
-                        new_activity_label = $("<label></label>");
-                        new_activity_label.text("Description: " + _post.post.activity.description);
+                        new_activity_label = $("<div class='extra text'></div>");
+                        new_activity_label.text(_post.post.activity.description);
                         new_activity_label.attr("id", "activity-label-description");
                         $("#post-div-" + _post.post.postID.toString()).append(new_activity_label);
 
-                        text_break = $("<br>");
-                        $("#post-div-" + _post.post.postID.toString()).append(text_break);
-
-                        new_activity_label = $("<label></label>");
+                        new_activity_label = $("<div class='extra text'></div>");
                         new_activity_label.text("Distance: " + _post.post.activity.distance.toString());
                         new_activity_label.attr("id", "activity-label-distance");
                         $("#post-div-" + _post.post.postID.toString()).append(new_activity_label);
 
-                        text_break = $("<br>");
-                        $("#post-div-" + _post.post.postID.toString()).append(text_break);
-
-                        new_activity_label = $("<label></label>");
-                        new_activity_label.text("Time Elapsed: " + _post.post.activity.hours.toString() + ":" +
-                            _post.post.activity.minutes.toString() + ":" +
-                            _post.post.activity.seconds.toString());
+                        new_activity_label = $("<div class='extra text'></div>");
+                        new_activity_label.text("Time Elapsed: " + (_post.post.activity.hours.toString() == "0" ? "" : _post.post.activity.hours.toString() + ":") +
+                            ("0" + _post.post.activity.minutes).slice(-2) + ":" +
+                            ("0" + _post.post.activity.seconds).slice(-2));
                         new_activity_label.attr("id", "activity-label-time_elapsed");
                         $("#post-div-" + _post.post.postID.toString()).append(new_activity_label);
 
-                        text_break = $("<br>");
-                        $("#post-div-" + _post.post.postID.toString()).append(text_break);
+                        var like_span = $("<span style='white-space: nowrap;'></span>");
 
-                        new_activity_label = $("<label></label>");
-                        new_activity_label.text("Likes: " + _post.post.likes.toString());
+                        var like_button = $("<div class='meta' style='display: inline-block;'><a class='like'><i class='like icon red'></i></a></div>");
+                        like_button.attr("id","like-button-" + _post.post.postID.toString());
+
+                        new_activity_label = $("<label style='display: inline-block;'></label>");
+                        new_activity_label.text(_post.post.likes.toString());
                         new_activity_label.attr("id", "post-label-likes-i" + _post.post.postID.toString());
-                        $("#post-div-" + _post.post.postID.toString()).append(new_activity_label);
-
-                        text_break = $("<br>");
-                        $("#post-div-" + _post.post.postID.toString()).append(text_break);
-
-                        var like_button = $("<button></button>");
-                        like_button.text("Like");
-                        like_button.attr("id", "like-button-" + _post.post.postID.toString());
 
                         like_button.click(function() {
                             $.ajax({
                                 url: '/individualfeed/like-post?postID=' + _post.post.postID,
                                 method: 'PUT',
                                 success: function(val) {
-                                    alert("You liked your post!");
+                                    //alert("You liked your post!");
                                     document.getElementById("post-label-likes-i"
-                                        + _post.post.postID.toString()).innerHTML = "Likes: " + val;
+                                        + _post.post.postID.toString()).innerHTML = val.toString();
                                 },
                                 error: function() {
                                     alert("Error in liking post");
@@ -210,7 +217,12 @@ $(document).ready(function() {
                             })
                         });
 
-                        $("#post-div-" + _post.post.postID.toString()).append(like_button);
+                        like_span.append(like_button);
+                        like_span.append(new_activity_label);
+                        $("#post-div-" + _post.post.postID.toString()).append(like_span);
+
+                        let text_break = $("<br>");
+                        $("#post-div-" + _post.post.postID.toString()).append(text_break);
 
                         var delete_button = $("<button></button>");
                         delete_button.text("Delete Post");
@@ -234,6 +246,29 @@ $(document).ready(function() {
                             })
                         });
                         $("#post-div-" + _post.post.postID.toString()).append(delete_button);
+
+                        //Update Activity Button
+                        var update_button = $("<button></button>");
+                        update_button.text("Update Activity");
+                        update_button.attr("id", "update-button-" + _post.post.postID.toString());
+
+                        update_button.click(function () {
+                            $("#activityTitle").val(_post.post.activity.title);
+                            $("#activityDescription").val(_post.post.activity.description);
+                            $("#activityDistance").val(_post.post.activity.distance);
+                            $("#activityHours").val(_post.post.activity.hours);
+                            $("#activityMinutes").val(_post.post.activity.minutes);
+                            $("#activitySeconds").val(_post.post.activity.seconds);
+
+                            $("#getActivityID").text(_post.post.activity.activityID);
+
+                            $("#activityModalHeader").text("Update Activity");
+                            $("#submitActivity").text("Submit Update");
+
+                            $("#createActivityModal").modal('show');
+                        });
+                        $("#post-div-" + _post.post.postID.toString()).append(update_button);
+                        //End Activity Update
 
                         text_break = $("<br><br>");
                         $("#post-div-" + _post.post.postID.toString()).append(text_break);
@@ -292,9 +327,9 @@ $(document).ready(function() {
                                     $("#g-" + groupID + "-" + "post-div-" + _post.post.postID.toString()).append(text_break);
 
                                     new_activity_label = $("<label></label>");
-                                    new_activity_label.text("Time Elapsed: " + _post.post.activity.hours.toString() + ":" +
-                                        _post.post.activity.minutes.toString() + ":" +
-                                        _post.post.activity.seconds.toString());
+                                    new_activity_label.text("Time Elapsed: " + (_post.post.activity.hours.toString() == "0" ? "" : _post.post.activity.hours.toString() + ":") +
+                                        ("0" + _post.post.activity.minutes).slice(-2) + ":" +
+                                        ("0" + _post.post.activity.seconds).slice(-2));
                                     new_activity_label.attr("id", "activity-label-time_elapsed");
                                     $("#g-" + groupID + "-" + "post-div-" + _post.post.postID.toString()).append(new_activity_label);
 
@@ -411,43 +446,31 @@ $(document).ready(function() {
                                         text_break = $("<br>");
                                         $("#comment-" + _post.post.postID.toString() + "-" + commentArray.indexOf(comment)).append(text_break);
                                     }
-                                    //comment.attr("id", "comment-" + _post.post.postID.toString() + "-" + )
+                                    
+                                    if(_post.post.activity.userID == userID) {
+                                        //Update Activity Button
+                                        var update_button = $("<button></button>");
+                                        update_button.text("Update Activity");
+                                        update_button.attr("id", "update-button-" + _post.post.postID.toString());
 
-                                    // $.ajax({
-                                    //     url: '/groupfeed/like-post?postID=' + _post.post.postID,
-                                    //     method: 'PUT',
-                                    //     success: function(val) {
-                                    //         alert("You liked " + uname + "'s post!");
-                                    //         document.getElementById("post-label-likes-g"
-                                    //             + _post.post.postID.toString()).innerHTML = "Likes: " + val;
-                                    //     },
-                                    //     error: function() {
-                                    //         alert("Error in liking post");
-                                    //     }
-                                    // });
-                                    //
-                                    //
-                                    // $("#comment-section-" + _post.post.postID.toString()).append(comments);
+                                        update_button.click(function () {
+                                            $("#activityTitle").val(_post.post.activity.title);
+                                            $("#activityDescription").val(_post.post.activity.description);
+                                            $("#activityDistance").val(_post.post.activity.distance);
+                                            $("#activityHours").val(_post.post.activity.hours);
+                                            $("#activityMinutes").val(_post.post.activity.minutes);
+                                            $("#activitySeconds").val(_post.post.activity.seconds);
 
-                                    // comment_button.click(function() {
-                                    //     $.ajax({
-                                    //         url: '/groupfeed/comment-post?postID=' + _post.post.postID + "&userID=" + userID,
-                                    //         method: 'DELETE',
-                                    //         success: function(val) {
-                                    //             if (val == 1) {
-                                    //                 alert("You commentd your post!");
-                                    //                 document.getElementById("g-" + groupID + "-" + "post-div-"
-                                    //                     + _post.post.postID.toString()).hidden = true;
-                                    //             }
-                                    //             else
-                                    //                 alert("You did not comment your post!");
-                                    //         },
-                                    //         error: function() {
-                                    //             alert("Error in liking post");
-                                    //         }
-                                    //     })
-                                    // });
-                                    // $("#g-" + groupID + "-" + "post-div-" + _post.post.postID.toString()).append(comment_button);
+                                            $("#getActivityID").text(_post.post.activity.activityID);
+
+                                            $("#activityModalHeader").text("Update Activity");
+                                            $("#submitActivity").text("Submit Update");
+
+                                            $("#createActivityModal").modal('show');
+                                        });
+                                        $("#g-" + groupID + "-" + "post-div-" + _post.post.postID.toString()).append(update_button);
+                                        //End Activity Update
+                                    }
 
                                     text_break = $("<br><br>");
                                     $("#g-" + groupID + "-" + "post-div-" + _post.post.postID.toString()).append(text_break);
@@ -469,8 +492,8 @@ $(document).ready(function() {
     $("#new-group-button").click(function(){
         $.post('/groupfeed/create?userID=' + userID,
             function(data, status) {
-                console.log("New group: " + data);
                 addGroupToFeeds(data, userID);
+                alert("New group created: Group " + data.toString());
             });
     });
 
