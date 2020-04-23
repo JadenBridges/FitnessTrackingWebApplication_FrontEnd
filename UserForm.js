@@ -44,7 +44,6 @@ $(document).ready(function() {
 
     $("#loginButton").click(function(){
         let data = {username: $("#loginName").val(), password : $("#loginPass").val()};
-        const thisPage = $(document);
 
         $.ajax({
             type: "GET",

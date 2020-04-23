@@ -1,6 +1,5 @@
-var userID = '1';
-
 $(document).ready(function() {
+    const userID = $("#getUserID").text();
     // link to modal
     $("#createActivityLink").click(function(){
         console.log("Here");
@@ -11,6 +10,7 @@ $(document).ready(function() {
     $.ajax('/groupfeed/getgroups?userID=' + userID,
         {
             success: function(response) {
+                console.log(userID);
                 // for each group received
                 for(const item of response) {
                     addGroupToFeeds(item.groupID);
