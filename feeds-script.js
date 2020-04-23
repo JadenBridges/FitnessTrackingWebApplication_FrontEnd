@@ -415,11 +415,14 @@ $(document).ready(function() {
                                             method: 'POST',
                                             success: function(val) {
                                                 if (val == 0) {
-                                                    alert("You left a comment!");
-
+                                                    var temp_comment = $("<user_comment></user_comment>");
+                                                    temp_comment.text("You said \"" + entered_text + "\"");
+                                                    temp_comment.attr("id", "temp-comment-" + _post.post.postID.toString());
+                                                    $("#user-comments-" + _post.post.postID.toString()).append(temp_comment);
+                                                    document.getElementById("new-comment-" + _post.post.postID.toString()).value = "";
                                                 }
                                                 else
-                                                    alert("You did not leave a comment!");
+                                                    alert("Error in commenting on post");
                                             },
                                             error: function() {
                                                 alert("Error in liking post");
@@ -439,14 +442,17 @@ $(document).ready(function() {
                                     for(const comment of commentArray)
                                     {
                                         var comment_label = $("<user-comment></user-comment>");
-                                        comment_label.text(comment.userDTO.username + " says \"" + comment.message + "\"");
+                                        if (comment.userDTO.userID == userID)
+                                            comment_label.text("You said \"" + comment.message + "\"");
+                                        else
+                                            comment_label.text(comment.userDTO.username + " said \"" + comment.message + "\"");
                                         comment_label.attr("id", "comment-" + _post.post.postID.toString() + "-" + commentArray.indexOf(comment));
                                         $("#user-comments-" + _post.post.postID.toString()).append(comment_label);
 
                                         text_break = $("<br>");
                                         $("#comment-" + _post.post.postID.toString() + "-" + commentArray.indexOf(comment)).append(text_break);
                                     }
-                                    
+
                                     if(_post.post.activity.userID == userID) {
                                         //Update Activity Button
                                         var update_button = $("<button></button>");
