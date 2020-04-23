@@ -1,9 +1,16 @@
 $(document).ready(function() {
     const userID = $("#getUserID").text();
-    // link to modal
+
+    // link to activity modal
     $("#createActivityLink").click(function(){
-        console.log("Here");
-        $('.ui.modal').modal('show');
+        $("#createActivityModal").modal('show');
+    });
+
+    //link to summaryModal
+    $("#testButton").click(function(){
+        $("#summaryHeader").text("Test Text");
+        console.log("From after test");
+        $("#summaryModal").modal('show');
     });
 
     // get the groups and populate the selector with them
