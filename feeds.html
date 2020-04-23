@@ -26,11 +26,13 @@
     </div>
 </head>
 <body>
+<!--Hidden span used to getUserID-->
 <span style="display: none;" id="getUserID" th:text="${userID}"></span>
+
 <div>
     <button id="new-group-button">Create new group</button>
-</div>
-<br>
+</div><br>
+
 <div>
     <select id="page-selector" name="pages">
         <option value="individual-feed" id="individual-feed-option">Individual Feed</option>
@@ -38,8 +40,8 @@
     <button id="feed-button">Go to feed</button>
 </div>
 
+<group id="individual-posts" style="display: none;"></group>
 
-<group id="individual-posts" style="display: none;">Individual posts</group>
 <!-- Create Activity Button -->
 <footer class = "bottom">
     <div class = "ui container">
@@ -48,7 +50,7 @@
 </footer>
 
 <!-- Create Activity Modal-->
-<div class="ui modal">
+<div class="ui modal" id="createActivityModal">
     <i class="close icon"></i>
     <div class="header">
         Create Activity
@@ -64,39 +66,73 @@
                     <div class="two fields">
                         <div class="sixteen wide field">
                             <label>Name</label>
-                            <input type="text" name="activity_name" placeholder="Activity Name">
+                            <input type="text" name="activity_name" placeholder="Activity Name" id="activityTitle">
                         </div>
                         <div class="field">
                             <label>Distance</label>
-                            <input type="text" name="activity_distance" placeholder="Distance">
+                            <input type="text" name="activity_distance" placeholder="Distance" id="activityDistance">
                         </div>
                     </div>
                     <label>Time</label>
                     <div class="three fields">
                         <div class="field">
-                            <input type="text" name ="activity_hours" placeholder="Time in hours">
+                            <input type="text" name ="activity_hours" placeholder="Time in hours" id="activityHours">
                         </div>
                         <div class="field">
-                            <input type="text" name ="activity_minutes" placeholder="Time in minutes">
+                            <input type="text" name ="activity_minutes" placeholder="Time in minutes" id = "activityMinutes">
                         </div>
                         <div class="field">
-                            <input type="text" name ="activity_seconds" placeholder="Time in seconds">
+                            <input type="text" name ="activity_seconds" placeholder="Time in seconds" id = "activitySeconds">
                         </div>
                     </div>
                 </div>
                 <div class="field">
                     <label>Description</label>
-                    <textarea name = "activity_description" placeholder="Enter details about your activity!">
+                    <textarea name = "activity_description" placeholder="Enter details about your activity!" id="activityDescription">
                     </textarea>
                 </div>
-                <div class="ui primary button" id="submitActivity">Submit Activity </div>
+                <div class="ui primary button" id="submitActivity">Submit Activity</div>
             </form>
         </div>
     </div>
 </div>
 
-<group id="individual-posts" style="display: none;"></group>
+<!--test button-->
+<div class="ui primary button" id="testButton">Test Summary</div>
 
+<!--Get summary modal-->
+<div class="ui modal" id="summaryModal">
+    <i class="close icon"></i>
+    <div class="header" id="summaryHeader"></div>
+    <div class="image content">
+        <div class="ui medium image">
+            <img src="../logo.png">
+        </div>
+        <div class="description">
+            <div class="ui header">Enter a username and password below.</div>
+            <form class="ui large form">
+                <div class="ui stacked segment">
+                    <div class="field">
+                        <div class="ui left icon input">
+                            <i class="user icon"></i>
+                            <input type="text" name="username" placeholder="Username" id="signUpName">
+                        </div>
+                    </div>
+                    <div class="field">
+                        <div class="ui left icon input">
+                            <i class="lock icon"></i>
+                            <input type="password" name="password" placeholder="Password" id="signUpPass">
+                        </div>
+                    </div>
+                    <div class="ui fluid large blue submit button" id="signUpButton">Create Account</div>
+                </div>
+
+                <div class="ui error message"></div>
+
+            </form>
+        </div>
+    </div>
+</div>
 
 </body>
 </html>

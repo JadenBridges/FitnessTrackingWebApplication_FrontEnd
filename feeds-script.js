@@ -7,20 +7,29 @@ $(document).ready(function() {
     $(".ui.positive.message").hide();
 
     const userID = $("#getUserID").text();
-    // link to modal
+
+    // link to activity modal
     $("#createActivityLink").click(function(){
-        console.log("Here");
-        $('.ui.modal').modal('show');
+        $("#createActivityModal").modal('show');
+    });
+
+    //link to summaryModal
+    $("#testButton").click(function(){
+        $("#summaryHeader").text("Test Text");
+        console.log("From after test");
+        $("#summaryModal").modal('show');
     });
     //create new activity
     $("#submitActivity").click(function(){
         let data = {userID : userID,title: $("#activityTitle").val(), description : $("#activityDescription").val(), distance: $("#activityDistance").val(),
             hours: $("#activityHours").val(),minutes: $("#activityMinutes").val(),seconds: $("#activitySeconds").val()};
+        console.log(data);
         $.ajax({
             type: "POST",
             url: url + "/activity/create",
-            data: data,
+            data: JSON.stringify(data),
             dataType: "json",
+            contentType: "application/json; charset=utf-8",
             success: function(msg) {
                 console.log(msg);
                 if(msg == -1){
