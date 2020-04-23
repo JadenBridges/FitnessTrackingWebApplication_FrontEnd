@@ -1,5 +1,5 @@
 const groups_to_owners = new Map();
-const current_groupID = -1;
+let current_groupID = -1;
 
 $(document).ready(function() {
     const url = "https://localhost:8080";
@@ -7,6 +7,12 @@ $(document).ready(function() {
     $(".ui.positive.message").hide();
 
     const userID = $("#getUserID").text();
+
+    // create elements for adding and deleting users and hide them
+    createAddDeleteUserElements();
+    $("#username-field").hide();
+    $("#add-user-button").hide();
+    $("#delete-user-button").hide();
 
     // link to activity modal
     $("#createActivityLink").click(function(){
@@ -77,10 +83,10 @@ $(document).ready(function() {
 
     // select a feed to view
     $("#feed-button").click(function () {
-        // remove any elements for add or delete user
-        $("#username-field").remove();
-        $("#add-user-button").remove();
-        $("#delete-user-button").remove();
+        // hide any elements for add or delete user
+        $("#username-field").hide();
+        $("#add-user-button").hide();
+        $("#delete-user-button").hide();
         // hide all groups
         $("group").hide();
         // if individual feed selected
@@ -100,20 +106,24 @@ $(document).ready(function() {
 
             // if user is the owner of this group, add elements to allow them to add and delete users
             if(groups_to_owners.get(parseInt(groupID)) == userID) {
-                // field to enter username
-                let username_field = $("<input>");
-                username_field.attr("type", "text");
-                username_field.attr("id", "username-field");
-                // button to add user
-                let add_user_button = $("<button></button>");
-                add_user_button.attr("id", "add-user-button");
-                add_user_button.text("Add User");
-                // button to delete user
-                let delete_user_button = $("<button></button>");
-                delete_user_button.attr("id", "delete-user-button");
-                delete_user_button.text("Delete User");
-                // put into body
-                $("body").append(username_field, add_user_button, delete_user_button);
+                current_groupID = groupID;
+                $("#username-field").show();
+                $("#add-user-button").show();
+                $("#delete-user-button").show();
+                // // field to enter username
+                // let username_field = $("<input>");
+                // username_field.attr("type", "text");
+                // username_field.attr("id", "username-field");
+                // // button to add user
+                // let add_user_button = $("<button></button>");
+                // add_user_button.attr("id", "add-user-button");
+                // add_user_button.text("Add User");
+                // // button to delete user
+                // let delete_user_button = $("<button></button>");
+                // delete_user_button.attr("id", "delete-user-button");
+                // delete_user_button.text("Delete User");
+                // // put into body
+                // $("body").append(username_field, add_user_button, delete_user_button);
             }
         }
     });
@@ -189,50 +199,72 @@ $(document).ready(function() {
                         let new_post_div = $("<post></post>");
                         new_post_div.attr("id", "g-" + groupID + "-" + "post-div-" + _post.post.postID.toString());
                         $("#group-div-" + groupID).append(new_post_div);
+                        var postUserID = _post.post.activity.userID;
 
-                        let new_activity_label = $("<label></label>");
-                        new_activity_label.text("Title: " + _post.post.activity.title);
-                        new_activity_label.attr("id", "activity-label-title");
-                        $("#g-" + groupID + "-" + "post-div-" + _post.post.postID.toString()).append(new_activity_label);
+                        $.ajax('/user/getusername?userID=' + postUserID,
+                            {
+                                success: function(response) {
+                                    var uname = "";
+                                    let new_activity_label = $("<h2></h2>");
+                                    console.log("line 147: " + response);
+                                    uname = response;
+                                    console.log("line 154");
+                                    new_activity_label.text(uname + " posted");
+                                    new_activity_label.attr("id", "post-user");
+                                    $("#g-" + groupID + "-" + "post-div-" + _post.post.postID.toString()).append(new_activity_label);
 
-                        let text_break = $("<br>");
-                        $("#g-" + groupID + "-" + "post-div-" + _post.post.postID.toString()).append(text_break);
+                                    let text_break = $("<br>");
+                                    $("#g-" + groupID + "-" + "post-div-" + _post.post.postID.toString()).append(text_break);
 
-                        new_activity_label = $("<label></label>");
-                        new_activity_label.text("Description: " + _post.post.activity.description);
-                        new_activity_label.attr("id", "activity-label-description");
-                        $("#g-" + groupID + "-" + "post-div-" + _post.post.postID.toString()).append(new_activity_label);
+                                    new_activity_label = $("<label></label>");
+                                    new_activity_label.text("Title: " + _post.post.activity.title);
+                                    new_activity_label.attr("id", "activity-label-title");
+                                    $("#g-" + groupID + "-" + "post-div-" + _post.post.postID.toString()).append(new_activity_label);
 
-                        text_break = $("<br>");
-                        $("#g-" + groupID + "-" + "post-div-" + _post.post.postID.toString()).append(text_break);
+                                    text_break = $("<br>");
+                                    $("#g-" + groupID + "-" + "post-div-" + _post.post.postID.toString()).append(text_break);
 
-                        new_activity_label = $("<label></label>");
-                        new_activity_label.text("Distance: " + _post.post.activity.distance.toString());
-                        new_activity_label.attr("id", "activity-label-distance");
-                        $("#g-" + groupID + "-" + "post-div-" + _post.post.postID.toString()).append(new_activity_label);
+                                    new_activity_label = $("<label></label>");
+                                    new_activity_label.text("Description: " + _post.post.activity.description);
+                                    new_activity_label.attr("id", "activity-label-description");
+                                    $("#g-" + groupID + "-" + "post-div-" + _post.post.postID.toString()).append(new_activity_label);
 
-                        text_break = $("<br>");
-                        $("#g-" + groupID + "-" + "post-div-" + _post.post.postID.toString()).append(text_break);
+                                    text_break = $("<br>");
+                                    $("#g-" + groupID + "-" + "post-div-" + _post.post.postID.toString()).append(text_break);
 
-                        new_activity_label = $("<label></label>");
-                        new_activity_label.text("Time Elapsed: " + _post.post.activity.hours.toString() + ":" +
-                            _post.post.activity.minutes.toString() + ":" +
-                            _post.post.activity.seconds.toString());
-                        new_activity_label.attr("id", "activity-label-time_elapsed");
-                        $("#g-" + groupID + "-" + "post-div-" + _post.post.postID.toString()).append(new_activity_label);
+                                    new_activity_label = $("<label></label>");
+                                    new_activity_label.text("Distance: " + _post.post.activity.distance.toString());
+                                    new_activity_label.attr("id", "activity-label-distance");
+                                    $("#g-" + groupID + "-" + "post-div-" + _post.post.postID.toString()).append(new_activity_label);
 
-                        text_break = $("<br>");
-                        $("#g-" + groupID + "-" + "post-div-" + _post.post.postID.toString()).append(text_break);
+                                    text_break = $("<br>");
+                                    $("#g-" + groupID + "-" + "post-div-" + _post.post.postID.toString()).append(text_break);
 
-                        new_activity_label = $("<label></label>");
-                        new_activity_label.text("Likes: " + _post.post.likes.toString());
-                        new_activity_label.attr("id", "post-label-likes");
-                        $("#g-" + groupID + "-" + "post-div-" + _post.post.postID.toString()).append(new_activity_label);
+                                    new_activity_label = $("<label></label>");
+                                    new_activity_label.text("Time Elapsed: " + _post.post.activity.hours.toString() + ":" +
+                                        _post.post.activity.minutes.toString() + ":" +
+                                        _post.post.activity.seconds.toString());
+                                    new_activity_label.attr("id", "activity-label-time_elapsed");
+                                    $("#g-" + groupID + "-" + "post-div-" + _post.post.postID.toString()).append(new_activity_label);
 
-                        text_break = $("<br>");
-                        $("#g-" + groupID + "-" + "post-div-" + _post.post.postID.toString()).append(text_break);
-                        text_break = $("<br>");
-                        $("#g-" + groupID + "-" + "post-div-" + _post.post.postID.toString()).append(text_break);
+                                    text_break = $("<br>");
+                                    $("#g-" + groupID + "-" + "post-div-" + _post.post.postID.toString()).append(text_break);
+
+                                    new_activity_label = $("<label></label>");
+                                    new_activity_label.text("Likes: " + _post.post.likes.toString());
+                                    new_activity_label.attr("id", "post-label-likes");
+                                    $("#g-" + groupID + "-" + "post-div-" + _post.post.postID.toString()).append(new_activity_label);
+
+                                    text_break = $("<br>");
+                                    $("#g-" + groupID + "-" + "post-div-" + _post.post.postID.toString()).append(text_break);
+                                    text_break = $("<br>");
+                                    $("#g-" + groupID + "-" + "post-div-" + _post.post.postID.toString()).append(text_break);
+                                },
+                                error: function() {
+                                    alert("Error in getting username");
+                                }
+                            });
+
                     }
                 },
                 error: function () {
@@ -269,4 +301,62 @@ $(document).ready(function() {
         groups_to_owners.set(groupID, ownerID);
     }
 
+    function createAddDeleteUserElements() {
+        // field to enter username
+        const username_field = $("<input>");
+        username_field.attr("type", "text");
+        username_field.attr("id", "username-field");
+        // button to add user
+        const add_user_button = $("<button></button>");
+        add_user_button.attr("id", "add-user-button");
+        add_user_button.text("Add User");
+        // button to delete user
+        const delete_user_button = $("<button></button>");
+        delete_user_button.attr("id", "delete-user-button");
+        delete_user_button.text("Delete User");
+        // put into body
+        $("body").append(username_field, add_user_button, delete_user_button);
+
+    }
+
+    // add a user to a group
+    $("#add-user-button").click(function(){
+        // get the username from the input text field
+        let username = document.getElementById("username-field").value;
+        // convert the username to a userID
+        $.ajax('/user/getuserid?username=' + username,
+            {
+                success: function(response) {
+                    console.log("userID: " + response);
+                    // make the request to add the user to the group
+                    $.post('/groupfeed/adduser?userID=' + response.toString() + '&groupID=' + current_groupID.toString(),
+                        function(data, status) {
+                            alert(username + " successfully added to Group " + current_groupID + "!");
+                        });
+                }
+            })
+    });
+
+    // delete a user from a group
+    $("#delete-user-button").click(function(){
+        // get the username from the input text field
+        let username = document.getElementById("username-field").value;
+        // convert the username to a userID
+        $.ajax('/user/getuserid?username=' + username,
+            {
+                success: function(response) {
+                    console.log("userID: " + response);
+                    // make the request to delete the user from the group
+                    $.ajax({
+                        url: '/groupfeed/removeuser?userID=' + response.toString() + '&groupID=' + current_groupID.toString(),
+                        method: 'PUT',
+                        success: function(data) {
+                            alert(username + " successfully removed from Group " + current_groupID + "!");
+                        }
+                    })
+
+                }
+            })
+    });
+    
 });
