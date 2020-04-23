@@ -20,6 +20,10 @@ $(document).ready(function() {
         $("#createActivityModal").modal('show');
     });
 
+    $("#logoutButton").click(function(){
+        document.location.href = url + "/";
+    });
+
     //link to summaryModal
     $("#testButton").click(function(){
         var name = "";
@@ -174,9 +178,9 @@ $(document).ready(function() {
                         $("#post-div-" + _post.post.postID.toString()).append(text_break);
 
                         new_activity_label = $("<label></label>");
-                        new_activity_label.text("Time Elapsed: " + _post.post.activity.hours.toString() + ":" +
-                            _post.post.activity.minutes.toString() + ":" +
-                            _post.post.activity.seconds.toString());
+                        new_activity_label.text("Time Elapsed: " + (_post.post.activity.hours.toString() == "0" ? "" : _post.post.activity.hours.toString() + ":") +
+                            ("0" + _post.post.activity.minutes).slice(-2) + ":" +
+                            ("0" + _post.post.activity.seconds).slice(-2));
                         new_activity_label.attr("id", "activity-label-time_elapsed");
                         $("#post-div-" + _post.post.postID.toString()).append(new_activity_label);
 
@@ -257,7 +261,7 @@ $(document).ready(function() {
                         $("#group-div-" + groupID).append(new_post_div);
                         var postUserID = _post.post.activity.userID;
 
-                        $.ajax('/user/getusername?userID=' + postUserID,
+                        $.ajax('/user/getusername?userid=' + postUserID,
                             {
                                 success: function(response) {
                                     var uname = "";
@@ -292,9 +296,9 @@ $(document).ready(function() {
                                     $("#g-" + groupID + "-" + "post-div-" + _post.post.postID.toString()).append(text_break);
 
                                     new_activity_label = $("<label></label>");
-                                    new_activity_label.text("Time Elapsed: " + _post.post.activity.hours.toString() + ":" +
-                                        _post.post.activity.minutes.toString() + ":" +
-                                        _post.post.activity.seconds.toString());
+                                    new_activity_label.text("Time Elapsed: " + (_post.post.activity.hours.toString() == "0" ? "" : _post.post.activity.hours.toString() + ":") +
+                                        ("0" + _post.post.activity.minutes).slice(-2) + ":" +
+                                        ("0" + _post.post.activity.seconds).slice(-2));
                                     new_activity_label.attr("id", "activity-label-time_elapsed");
                                     $("#g-" + groupID + "-" + "post-div-" + _post.post.postID.toString()).append(new_activity_label);
 
