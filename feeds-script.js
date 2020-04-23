@@ -1,23 +1,41 @@
+const groups_to_owners = new Map();
+let current_groupID = -1;
+
 $(document).ready(function() {
     const url = "https://localhost:8080";
     $(".ui.warning.message").hide();
     $(".ui.positive.message").hide();
 
     const userID = $("#getUserID").text();
-    // link to modal
+
+    // create elements for adding and deleting users and hide them
+    createAddDeleteUserElements();
+    $("#username-field").hide();
+    $("#add-user-button").hide();
+    $("#delete-user-button").hide();
+
+    // link to activity modal
     $("#createActivityLink").click(function(){
-        console.log("Here");
-        $('.ui.modal').modal('show');
+        $("#createActivityModal").modal('show');
+    });
+
+    //link to summaryModal
+    $("#testButton").click(function(){
+        $("#summaryHeader").text("Test Text");
+        console.log("From after test");
+        $("#summaryModal").modal('show');
     });
     //create new activity
     $("#submitActivity").click(function(){
         let data = {userID : userID,title: $("#activityTitle").val(), description : $("#activityDescription").val(), distance: $("#activityDistance").val(),
             hours: $("#activityHours").val(),minutes: $("#activityMinutes").val(),seconds: $("#activitySeconds").val()};
+        console.log(data);
         $.ajax({
             type: "POST",
             url: url + "/activity/create",
-            data: data,
+            data: JSON.stringify(data),
             dataType: "json",
+            contentType: "application/json; charset=utf-8",
             success: function(msg) {
                 console.log(msg);
                 if(msg == -1){
@@ -38,7 +56,7 @@ $(document).ready(function() {
                 console.log(userID);
                 // for each group received
                 for (const item of response) {
-                    addGroupToFeeds(item.groupID);
+                    addGroupToFeeds(item.groupID, item.owner);
                 }
             },
             error: function () {
@@ -48,6 +66,11 @@ $(document).ready(function() {
 
     // select a feed to view
     $("#feed-button").click(function () {
+        // hide any elements for add or delete user
+        $("#username-field").hide();
+        $("#add-user-button").hide();
+        $("#delete-user-button").hide();
+        // hide all groups
         $("group").hide();
         // if individual feed selected
         let selectedIndex = document.getElementById("page-selector").selectedIndex;
@@ -64,6 +87,27 @@ $(document).ready(function() {
             group_posts.innerHTML = "";
             getGroupPosts(groupID);
 
+            // if user is the owner of this group, add elements to allow them to add and delete users
+            if(groups_to_owners.get(parseInt(groupID)) == userID) {
+                current_groupID = groupID;
+                $("#username-field").show();
+                $("#add-user-button").show();
+                $("#delete-user-button").show();
+                // // field to enter username
+                // let username_field = $("<input>");
+                // username_field.attr("type", "text");
+                // username_field.attr("id", "username-field");
+                // // button to add user
+                // let add_user_button = $("<button></button>");
+                // add_user_button.attr("id", "add-user-button");
+                // add_user_button.text("Add User");
+                // // button to delete user
+                // let delete_user_button = $("<button></button>");
+                // delete_user_button.attr("id", "delete-user-button");
+                // delete_user_button.text("Delete User");
+                // // put into body
+                // $("body").append(username_field, add_user_button, delete_user_button);
+            }
         }
     });
 
@@ -217,7 +261,7 @@ $(document).ready(function() {
         $.post('/groupfeed/create?userID=' + userID,
             function(data, status) {
                 console.log("New group: " + data);
-                addGroupToFeeds(data);
+                addGroupToFeeds(data, userID);
             });
     });
 
@@ -235,6 +279,67 @@ $(document).ready(function() {
         new_group_div.attr("id","group-div-" + groupID.toString());
         new_group_div.hide();
         $("body").append(new_group_div);
+
+        // update the groups and owners map
+        groups_to_owners.set(groupID, ownerID);
     }
 
+    function createAddDeleteUserElements() {
+        // field to enter username
+        const username_field = $("<input>");
+        username_field.attr("type", "text");
+        username_field.attr("id", "username-field");
+        // button to add user
+        const add_user_button = $("<button></button>");
+        add_user_button.attr("id", "add-user-button");
+        add_user_button.text("Add User");
+        // button to delete user
+        const delete_user_button = $("<button></button>");
+        delete_user_button.attr("id", "delete-user-button");
+        delete_user_button.text("Delete User");
+        // put into body
+        $("body").append(username_field, add_user_button, delete_user_button);
+
+    }
+
+    // add a user to a group
+    $("#add-user-button").click(function(){
+        // get the username from the input text field
+        let username = document.getElementById("username-field").value;
+        // convert the username to a userID
+        $.ajax('/user/getuserid?username=' + username,
+            {
+                success: function(response) {
+                    console.log("userID: " + response);
+                    // make the request to add the user to the group
+                    $.post('/groupfeed/adduser?userID=' + response.toString() + '&groupID=' + current_groupID.toString(),
+                        function(data, status) {
+                            alert(username + " successfully added to Group " + current_groupID + "!");
+                        });
+                }
+            })
+    });
+
+    // delete a user from a group
+    $("#delete-user-button").click(function(){
+        // get the username from the input text field
+        let username = document.getElementById("username-field").value;
+        // convert the username to a userID
+        $.ajax('/user/getuserid?username=' + username,
+            {
+                success: function(response) {
+                    console.log("userID: " + response);
+                    // make the request to delete the user from the group
+                    $.ajax({
+                        url: '/groupfeed/removeuser?userID=' + response.toString() + '&groupID=' + current_groupID.toString(),
+                        method: 'PUT',
+                        success: function(data) {
+                            alert(username + " successfully removed from Group " + current_groupID + "!");
+                        }
+                    })
+
+                }
+            })
+    });
+    
 });
