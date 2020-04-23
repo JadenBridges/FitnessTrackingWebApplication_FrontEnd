@@ -1,9 +1,34 @@
 $(document).ready(function() {
+    const url = "https://localhost:8080";
+    $(".ui.warning.message").hide();
+    $(".ui.positive.message").hide();
+
     const userID = $("#getUserID").text();
     // link to modal
     $("#createActivityLink").click(function(){
         console.log("Here");
         $('.ui.modal').modal('show');
+    });
+    //create new activity
+    $("#submitActivity").click(function(){
+        let data = {userID : userID,title: $("#activityTitle").val(), description : $("#activityDescription").val(), distance: $("#activityDistance").val(),
+            hours: $("#activityHours").val(),minutes: $("#activityMinutes").val(),seconds: $("#activitySeconds").val()};
+        $.ajax({
+            type: "POST",
+            url: url + "/activity/create",
+            data: data,
+            dataType: "json",
+            success: function(msg) {
+                console.log(msg);
+                if(msg == -1){
+                    $("#warning").show();
+                    $("#warning").delay(3000).fadeOut();
+                } else{
+                    $("#createActivitySuccess").show();
+                    $("#createActivitySuccess").delay(3000).fadeOut();
+                }
+            }
+        });
     });
 
     // get the groups and populate the selector with them
