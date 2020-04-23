@@ -61,4 +61,20 @@ $(document).ready(function() {
             }
         });
     });
+
+    $("#deleteButton").click(function(){
+        console.log("clicked");
+        $.ajax({
+            type: "DELETE",
+            url: "/user/delete?username=" + $("#loginName").val() + "&password=" + $("#loginPass").val(),
+            success: function(response) {
+                if(response == 1) {
+                    alert($("#loginName").val() + " account successfully deleted.");
+                }
+                else {
+                    alert("Failed to delete account " + $("#loginName").val());
+                }
+            }
+        })
+    })
 });
