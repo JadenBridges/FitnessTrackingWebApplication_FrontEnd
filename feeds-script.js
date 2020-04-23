@@ -201,6 +201,29 @@ $(document).ready(function() {
 
                         $("#post-div-" + _post.post.postID.toString()).append(like_button);
 
+                        var delete_button = $("<button></button>");
+                        delete_button.text("Delete Post");
+                        delete_button.attr("id", "delete-button-" + _post.post.postID.toString());
+
+                        delete_button.click(function() {
+                            $.ajax({
+                                url: '/individualfeed/delete-post?postID=' + _post.post.postID + "&userID=" + userID,
+                                method: 'DELETE',
+                                success: function(val) {
+                                    if (val == 1) {
+                                        alert("You deleted your post!");
+                                        document.getElementById("post-div-" + _post.post.postID.toString()).hidden = true;
+                                    }
+                                    else
+                                        alert("You did not delete your post!");
+                                },
+                                error: function() {
+                                    alert("Error in liking post");
+                                }
+                            })
+                        });
+                        $("#post-div-" + _post.post.postID.toString()).append(delete_button);
+
                         text_break = $("<br><br>");
                         $("#post-div-" + _post.post.postID.toString()).append(text_break);
                     }
@@ -294,6 +317,30 @@ $(document).ready(function() {
                                        })
                                     });
                                     $("#g-" + groupID + "-" + "post-div-" + _post.post.postID.toString()).append(like_button);
+
+                                    var delete_button = $("<button></button>");
+                                    delete_button.text("Delete Post");
+                                    delete_button.attr("id", "delete-button-" + _post.post.postID.toString());
+
+                                    delete_button.click(function() {
+                                        $.ajax({
+                                            url: '/groupfeed/delete-post?postID=' + _post.post.postID + "&userID=" + userID,
+                                            method: 'DELETE',
+                                            success: function(val) {
+                                                if (val == 1) {
+                                                    alert("You deleted your post!");
+                                                    document.getElementById("g-" + groupID + "-" + "post-div-"
+                                                        + _post.post.postID.toString()).hidden = true;
+                                                }
+                                                else
+                                                    alert("You did not delete your post!");
+                                            },
+                                            error: function() {
+                                                alert("Error in liking post");
+                                            }
+                                        })
+                                    });
+                                    $("#g-" + groupID + "-" + "post-div-" + _post.post.postID.toString()).append(delete_button);
 
                                     text_break = $("<br><br>");
                                     $("#g-" + groupID + "-" + "post-div-" + _post.post.postID.toString()).append(text_break);
