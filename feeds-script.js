@@ -353,6 +353,102 @@ $(document).ready(function() {
                                     });
                                     $("#g-" + groupID + "-" + "post-div-" + _post.post.postID.toString()).append(delete_button);
 
+                                    text_break = $("<br>");
+                                    $("#g-" + groupID + "-" + "post-div-" + _post.post.postID.toString()).append(text_break);
+
+                                    var comment_section = $("<comment-section></comment-section>");
+                                    comment_section.attr("id", "comment-section-" + _post.post.postID.toString());
+                                    $("#g-" + groupID + "-" + "post-div-" + _post.post.postID.toString()).append(comment_section);
+
+                                    var new_comment = $("<textarea></textarea>");
+                                    new_comment.attr("id", "new-comment-" + _post.post.postID.toString());
+                                    new_comment.attr("placeholder", "Type your comment here!");
+                                    $("#comment-section-" + _post.post.postID.toString()).append(new_comment);
+
+                                    var new_comment_button = $("<button></button>");
+                                    new_comment_button.text("Add Comment");
+                                    new_comment_button.attr("id", "comment-button-" + _post.post.postID.toString());
+                                    $("#comment-section-" + _post.post.postID.toString()).append(new_comment_button);
+                                    new_comment_button.click(function() {
+                                        var entered_text = document.getElementById("new-comment-" + _post.post.postID.toString()).value;
+                                        let data = {postID : _post.post.postID, userID : userID, message : entered_text};
+                                        $.ajax({
+                                            url: url + "/groupfeed/comment-post",
+                                            data: JSON.stringify(data),
+                                            dataType: "json",
+                                            contentType: "application/json; charset=utf-8",
+                                            method: 'POST',
+                                            success: function(val) {
+                                                if (val == 0) {
+                                                    alert("You left a comment!");
+
+                                                }
+                                                else
+                                                    alert("You did not leave a comment!");
+                                            },
+                                            error: function() {
+                                                alert("Error in liking post");
+                                            }
+                                        })
+                                    });
+
+
+                                    text_break = $("<br>");
+                                    $("#comment-section-" + _post.post.postID.toString()).append(text_break);
+
+                                    var user_comments = $("<user-comments></user-comments>");
+                                    user_comments.attr("id", "user-comments-" + _post.post.postID.toString());
+                                    $("#comment-section-" + _post.post.postID.toString()).append(user_comments);
+
+                                    var commentArray = _post.comments;
+                                    for(const comment of commentArray)
+                                    {
+                                        var comment_label = $("<user-comment></user-comment>");
+                                        comment_label.text(comment.userDTO.username + " says \"" + comment.message + "\"");
+                                        comment_label.attr("id", "comment-" + _post.post.postID.toString() + "-" + commentArray.indexOf(comment));
+                                        $("#user-comments-" + _post.post.postID.toString()).append(comment_label);
+
+                                        text_break = $("<br>");
+                                        $("#comment-" + _post.post.postID.toString() + "-" + commentArray.indexOf(comment)).append(text_break);
+                                    }
+                                    //comment.attr("id", "comment-" + _post.post.postID.toString() + "-" + )
+
+                                    // $.ajax({
+                                    //     url: '/groupfeed/like-post?postID=' + _post.post.postID,
+                                    //     method: 'PUT',
+                                    //     success: function(val) {
+                                    //         alert("You liked " + uname + "'s post!");
+                                    //         document.getElementById("post-label-likes-g"
+                                    //             + _post.post.postID.toString()).innerHTML = "Likes: " + val;
+                                    //     },
+                                    //     error: function() {
+                                    //         alert("Error in liking post");
+                                    //     }
+                                    // });
+                                    //
+                                    //
+                                    // $("#comment-section-" + _post.post.postID.toString()).append(comments);
+
+                                    // comment_button.click(function() {
+                                    //     $.ajax({
+                                    //         url: '/groupfeed/comment-post?postID=' + _post.post.postID + "&userID=" + userID,
+                                    //         method: 'DELETE',
+                                    //         success: function(val) {
+                                    //             if (val == 1) {
+                                    //                 alert("You commentd your post!");
+                                    //                 document.getElementById("g-" + groupID + "-" + "post-div-"
+                                    //                     + _post.post.postID.toString()).hidden = true;
+                                    //             }
+                                    //             else
+                                    //                 alert("You did not comment your post!");
+                                    //         },
+                                    //         error: function() {
+                                    //             alert("Error in liking post");
+                                    //         }
+                                    //     })
+                                    // });
+                                    // $("#g-" + groupID + "-" + "post-div-" + _post.post.postID.toString()).append(comment_button);
+
                                     text_break = $("<br><br>");
                                     $("#g-" + groupID + "-" + "post-div-" + _post.post.postID.toString()).append(text_break);
                                 },
