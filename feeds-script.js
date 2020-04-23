@@ -289,7 +289,7 @@ $(document).ready(function() {
             {
                 success: function(response) {
                     console.log("userID: " + response);
-                    // make the request to add the user
+                    // make the request to add the user to the group
                     $.post('/groupfeed/adduser?userID=' + response.toString() + '&groupID=' + current_groupID.toString(),
                         function(data, status) {
                             alert(username + " successfully added to Group " + current_groupID + "!");
@@ -299,4 +299,25 @@ $(document).ready(function() {
     });
 
     // delete a user from a group
+    $("#delete-user-button").click(function(){
+        // get the username from the input text field
+        let username = document.getElementById("username-field").value;
+        // convert the username to a userID
+        $.ajax('/user/getuserid?username=' + username,
+            {
+                success: function(response) {
+                    console.log("userID: " + response);
+                    // make the request to delete the user from the group
+                    $.ajax({
+                        url: '/groupfeed/removeuser?userID=' + response.toString() + '&groupID=' + current_groupID.toString(),
+                        method: 'PUT',
+                        success: function(data) {
+                            alert(username + " successfully removed from Group " + current_groupID + "!");
+                        }
+                    })
+
+                }
+            })
+    });
+    
 });
