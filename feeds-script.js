@@ -1,5 +1,5 @@
 const groups_to_owners = new Map();
-const current_groupID = -1;
+let current_groupID = -1;
 
 $(document).ready(function() {
     const url = "https://localhost:8080";
@@ -7,6 +7,12 @@ $(document).ready(function() {
     $(".ui.positive.message").hide();
 
     const userID = $("#getUserID").text();
+
+    // create elements for adding and deleting users and hide them
+    createAddDeleteUserElements();
+    $("#username-field").hide();
+    $("#add-user-button").hide();
+    $("#delete-user-button").hide();
 
     // link to activity modal
     $("#createActivityLink").click(function(){
@@ -60,10 +66,10 @@ $(document).ready(function() {
 
     // select a feed to view
     $("#feed-button").click(function () {
-        // remove any elements for add or delete user
-        $("#username-field").remove();
-        $("#add-user-button").remove();
-        $("#delete-user-button").remove();
+        // hide any elements for add or delete user
+        $("#username-field").hide();
+        $("#add-user-button").hide();
+        $("#delete-user-button").hide();
         // hide all groups
         $("group").hide();
         // if individual feed selected
@@ -83,20 +89,24 @@ $(document).ready(function() {
 
             // if user is the owner of this group, add elements to allow them to add and delete users
             if(groups_to_owners.get(parseInt(groupID)) == userID) {
-                // field to enter username
-                let username_field = $("<input>");
-                username_field.attr("type", "text");
-                username_field.attr("id", "username-field");
-                // button to add user
-                let add_user_button = $("<button></button>");
-                add_user_button.attr("id", "add-user-button");
-                add_user_button.text("Add User");
-                // button to delete user
-                let delete_user_button = $("<button></button>");
-                delete_user_button.attr("id", "delete-user-button");
-                delete_user_button.text("Delete User");
-                // put into body
-                $("body").append(username_field, add_user_button, delete_user_button);
+                current_groupID = groupID;
+                $("#username-field").show();
+                $("#add-user-button").show();
+                $("#delete-user-button").show();
+                // // field to enter username
+                // let username_field = $("<input>");
+                // username_field.attr("type", "text");
+                // username_field.attr("id", "username-field");
+                // // button to add user
+                // let add_user_button = $("<button></button>");
+                // add_user_button.attr("id", "add-user-button");
+                // add_user_button.text("Add User");
+                // // button to delete user
+                // let delete_user_button = $("<button></button>");
+                // delete_user_button.attr("id", "delete-user-button");
+                // delete_user_button.text("Delete User");
+                // // put into body
+                // $("body").append(username_field, add_user_button, delete_user_button);
             }
         }
     });
@@ -252,4 +262,41 @@ $(document).ready(function() {
         groups_to_owners.set(groupID, ownerID);
     }
 
+    function createAddDeleteUserElements() {
+        // field to enter username
+        const username_field = $("<input>");
+        username_field.attr("type", "text");
+        username_field.attr("id", "username-field");
+        // button to add user
+        const add_user_button = $("<button></button>");
+        add_user_button.attr("id", "add-user-button");
+        add_user_button.text("Add User");
+        // button to delete user
+        const delete_user_button = $("<button></button>");
+        delete_user_button.attr("id", "delete-user-button");
+        delete_user_button.text("Delete User");
+        // put into body
+        $("body").append(username_field, add_user_button, delete_user_button);
+
+    }
+
+    // add a user to a group
+    $("#add-user-button").click(function(){
+        // get the username from the input text field
+        let username = document.getElementById("username-field").value;
+        // convert the username to a userID
+        $.ajax('/user/getuserid?username=' + username,
+            {
+                success: function(response) {
+                    console.log("userID: " + response);
+                    // make the request to add the user
+                    $.post('/groupfeed/adduser?userID=' + response.toString() + '&groupID=' + current_groupID.toString(),
+                        function(data, status) {
+                            alert(username + " successfully added to Group " + current_groupID + "!");
+                        });
+                }
+            })
+    });
+
+    // delete a user from a group
 });
