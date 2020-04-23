@@ -21,15 +21,33 @@ $(document).ready(function() {
 
     //link to summaryModal
     $("#testButton").click(function(){
-        $("#summaryHeader").text("Test Text");
-        console.log("From after test");
+        var name = "";
+        $.ajax({
+            type: "GET",
+            url: url + "/user/getusername?userid=" + userID,
+            success: function(msg) {
+                $("#summaryHeader").text(msg + "\'s Achievement Summary");
+                $("#totalMileHead").text(msg + "\'s Total Mileage: ");
+                $("#bestPaceHead").text(msg + "\'s Fastest Pace: ");
+                $.ajax({
+                    type: "GET",
+                    url: url + "/summary/get?userID=" + userID,
+                    success: function(msg) {
+                        $("#totalMile").text(msg.substring(msg.indexOf(':') + 1, msg.indexOf('Q')) + "Miles");
+                        let newMsg = msg.substring(msg.indexOf(':') + 1, msg.length);
+                        console.log(newMsg);
+                        $("#bestPace").text(newMsg.substring(newMsg.indexOf(':') + 1, newMsg.length) + " per Mile");
+                    }
+                });
+            }
+        });
         $("#summaryModal").modal('show');
     });
+
     //create new activity
     $("#submitActivity").click(function(){
         let data = {userID : userID,title: $("#activityTitle").val(), description : $("#activityDescription").val(), distance: $("#activityDistance").val(),
             hours: $("#activityHours").val(),minutes: $("#activityMinutes").val(),seconds: $("#activitySeconds").val()};
-        console.log(data);
         $.ajax({
             type: "POST",
             url: url + "/activity/create",
@@ -37,7 +55,6 @@ $(document).ready(function() {
             dataType: "json",
             contentType: "application/json; charset=utf-8",
             success: function(msg) {
-                console.log(msg);
                 if(msg == -1){
                     $("#warning").show();
                     $("#warning").delay(3000).fadeOut();
