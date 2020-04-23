@@ -33,10 +33,14 @@ $(document).ready(function() {
                     type: "GET",
                     url: url + "/summary/get?userID=" + userID,
                     success: function(msg) {
-                        $("#totalMile").text(msg.substring(msg.indexOf(':') + 1, msg.indexOf('Q')) + "Miles");
-                        let newMsg = msg.substring(msg.indexOf(':') + 1, msg.length);
-                        console.log(newMsg);
-                        $("#bestPace").text(newMsg.substring(newMsg.indexOf(':') + 1, newMsg.length) + " per Mile");
+                        if(msg="No available data on user"){
+                            $("#totalMile").text("---");
+                            $("#bestPace").text("---");
+                        } else{
+                            $("#totalMile").text(msg.substring(msg.indexOf(':') + 1, msg.indexOf('Q')) + "Miles");
+                            let newMsg = msg.substring(msg.indexOf(':') + 1, msg.length);
+                            $("#bestPace").text(newMsg.substring(newMsg.indexOf(':') + 1, newMsg.length) + " per Mile");
+                        }
                     }
                 });
             }
