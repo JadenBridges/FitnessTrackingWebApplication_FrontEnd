@@ -33,7 +33,7 @@ $(document).ready(function() {
                     type: "GET",
                     url: url + "/summary/get?userID=" + userID,
                     success: function(msg) {
-                        if(msg="No available data on user"){
+                        if(msg=="No available data on user"){
                             $("#totalMile").text("---");
                             $("#bestPace").text("---");
                         } else{
