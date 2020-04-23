@@ -138,50 +138,72 @@ $(document).ready(function() {
                         let new_post_div = $("<post></post>");
                         new_post_div.attr("id", "g-" + groupID + "-" + "post-div-" + _post.post.postID.toString());
                         $("#group-div-" + groupID).append(new_post_div);
+                        var postUserID = _post.post.activity.userID;
 
-                        let new_activity_label = $("<label></label>");
-                        new_activity_label.text("Title: " + _post.post.activity.title);
-                        new_activity_label.attr("id", "activity-label-title");
-                        $("#g-" + groupID + "-" + "post-div-" + _post.post.postID.toString()).append(new_activity_label);
+                        $.ajax('/user/getusername?userID=' + postUserID,
+                            {
+                                success: function(response) {
+                                    var uname = "";
+                                    let new_activity_label = $("<h2></h2>");
+                                    console.log("line 147: " + response);
+                                    uname = response;
+                                    console.log("line 154");
+                                    new_activity_label.text(uname + " posted");
+                                    new_activity_label.attr("id", "post-user");
+                                    $("#g-" + groupID + "-" + "post-div-" + _post.post.postID.toString()).append(new_activity_label);
 
-                        let text_break = $("<br>");
-                        $("#g-" + groupID + "-" + "post-div-" + _post.post.postID.toString()).append(text_break);
+                                    let text_break = $("<br>");
+                                    $("#g-" + groupID + "-" + "post-div-" + _post.post.postID.toString()).append(text_break);
 
-                        new_activity_label = $("<label></label>");
-                        new_activity_label.text("Description: " + _post.post.activity.description);
-                        new_activity_label.attr("id", "activity-label-description");
-                        $("#g-" + groupID + "-" + "post-div-" + _post.post.postID.toString()).append(new_activity_label);
+                                    new_activity_label = $("<label></label>");
+                                    new_activity_label.text("Title: " + _post.post.activity.title);
+                                    new_activity_label.attr("id", "activity-label-title");
+                                    $("#g-" + groupID + "-" + "post-div-" + _post.post.postID.toString()).append(new_activity_label);
 
-                        text_break = $("<br>");
-                        $("#g-" + groupID + "-" + "post-div-" + _post.post.postID.toString()).append(text_break);
+                                    text_break = $("<br>");
+                                    $("#g-" + groupID + "-" + "post-div-" + _post.post.postID.toString()).append(text_break);
 
-                        new_activity_label = $("<label></label>");
-                        new_activity_label.text("Distance: " + _post.post.activity.distance.toString());
-                        new_activity_label.attr("id", "activity-label-distance");
-                        $("#g-" + groupID + "-" + "post-div-" + _post.post.postID.toString()).append(new_activity_label);
+                                    new_activity_label = $("<label></label>");
+                                    new_activity_label.text("Description: " + _post.post.activity.description);
+                                    new_activity_label.attr("id", "activity-label-description");
+                                    $("#g-" + groupID + "-" + "post-div-" + _post.post.postID.toString()).append(new_activity_label);
 
-                        text_break = $("<br>");
-                        $("#g-" + groupID + "-" + "post-div-" + _post.post.postID.toString()).append(text_break);
+                                    text_break = $("<br>");
+                                    $("#g-" + groupID + "-" + "post-div-" + _post.post.postID.toString()).append(text_break);
 
-                        new_activity_label = $("<label></label>");
-                        new_activity_label.text("Time Elapsed: " + _post.post.activity.hours.toString() + ":" +
-                            _post.post.activity.minutes.toString() + ":" +
-                            _post.post.activity.seconds.toString());
-                        new_activity_label.attr("id", "activity-label-time_elapsed");
-                        $("#g-" + groupID + "-" + "post-div-" + _post.post.postID.toString()).append(new_activity_label);
+                                    new_activity_label = $("<label></label>");
+                                    new_activity_label.text("Distance: " + _post.post.activity.distance.toString());
+                                    new_activity_label.attr("id", "activity-label-distance");
+                                    $("#g-" + groupID + "-" + "post-div-" + _post.post.postID.toString()).append(new_activity_label);
 
-                        text_break = $("<br>");
-                        $("#g-" + groupID + "-" + "post-div-" + _post.post.postID.toString()).append(text_break);
+                                    text_break = $("<br>");
+                                    $("#g-" + groupID + "-" + "post-div-" + _post.post.postID.toString()).append(text_break);
 
-                        new_activity_label = $("<label></label>");
-                        new_activity_label.text("Likes: " + _post.post.likes.toString());
-                        new_activity_label.attr("id", "post-label-likes");
-                        $("#g-" + groupID + "-" + "post-div-" + _post.post.postID.toString()).append(new_activity_label);
+                                    new_activity_label = $("<label></label>");
+                                    new_activity_label.text("Time Elapsed: " + _post.post.activity.hours.toString() + ":" +
+                                        _post.post.activity.minutes.toString() + ":" +
+                                        _post.post.activity.seconds.toString());
+                                    new_activity_label.attr("id", "activity-label-time_elapsed");
+                                    $("#g-" + groupID + "-" + "post-div-" + _post.post.postID.toString()).append(new_activity_label);
 
-                        text_break = $("<br>");
-                        $("#g-" + groupID + "-" + "post-div-" + _post.post.postID.toString()).append(text_break);
-                        text_break = $("<br>");
-                        $("#g-" + groupID + "-" + "post-div-" + _post.post.postID.toString()).append(text_break);
+                                    text_break = $("<br>");
+                                    $("#g-" + groupID + "-" + "post-div-" + _post.post.postID.toString()).append(text_break);
+
+                                    new_activity_label = $("<label></label>");
+                                    new_activity_label.text("Likes: " + _post.post.likes.toString());
+                                    new_activity_label.attr("id", "post-label-likes");
+                                    $("#g-" + groupID + "-" + "post-div-" + _post.post.postID.toString()).append(new_activity_label);
+
+                                    text_break = $("<br>");
+                                    $("#g-" + groupID + "-" + "post-div-" + _post.post.postID.toString()).append(text_break);
+                                    text_break = $("<br>");
+                                    $("#g-" + groupID + "-" + "post-div-" + _post.post.postID.toString()).append(text_break);
+                                },
+                                error: function() {
+                                    alert("Error in getting username");
+                                }
+                            });
+
                     }
                 },
                 error: function () {
