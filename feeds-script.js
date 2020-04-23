@@ -263,7 +263,7 @@ $(document).ready(function() {
                         $("#group-div-" + groupID).append(new_post_div);
                         var postUserID = _post.post.activity.userID;
 
-                        $.ajax('/user/getusername?userid=' + postUserID,
+                        $.ajax('/user/getusername?userID=' + postUserID,
                             {
                                 success: function(response) {
                                     var uname = "";
