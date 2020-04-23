@@ -4,7 +4,10 @@
     <meta charset="UTF-8">
     <title>Feeds</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/fomantic-ui@2.8.4/dist/semantic.min.css">
     <script src="feeds-script.js"></script>
+
+
 </head>
 <body>
 
@@ -20,6 +23,59 @@
 </div>
 
 <group id="individual-posts" style="display: none;">Individual posts</group>
+<!-- Create Activity Button -->
+<footer class = "bottom">
+    <div class = "ui container">
+        <div class="ui primary button" id="createActivityLink">Create Activity</div>
+    </div>
+</footer>
+
+<!-- Create Activity Modal-->
+<div class="ui modal">
+    <i class="close icon"></i>
+    <div class="header">
+        Create Activity
+    </div>
+    <div class="image content">
+        <div class="ui medium image">
+            <img src="../logo.png">
+        </div>
+        <div class="description">
+            <form class="ui form">
+                <h4 class="ui dividing header">Activity Information</h4>
+                <div class="field">
+                    <div class="two fields">
+                        <div class="sixteen wide field">
+                            <label>Name</label>
+                            <input type="text" name="activity_name" placeholder="Activity Name">
+                        </div>
+                        <div class="field">
+                            <label>Distance</label>
+                            <input type="text" name="activity_distance" placeholder="Distance">
+                        </div>
+                    </div>
+                    <label>Time</label>
+                    <div class="three fields">
+                        <div class="field">
+                            <input type="text" name ="activity_hours" placeholder="Time in hours">
+                        </div>
+                        <div class="field">
+                            <input type="text" name ="activity_minutes" placeholder="Time in minutes">
+                        </div>
+                        <div class="field">
+                            <input type="text" name ="activity_seconds" placeholder="Time in seconds">
+                        </div>
+                    </div>
+                </div>
+                <div class="field">
+                    <label>Description</label>
+                    <textarea name = "activity_description" placeholder="Enter details about your activity!">
+                    </textarea>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 
 </body>
 </html>
