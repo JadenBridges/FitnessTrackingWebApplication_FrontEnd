@@ -7,6 +7,43 @@ $(document).ready(function() {
     $(".ui.positive.message").hide();
 
     const userID = $("#getUserID").text();
+    $.ajax({
+        type: "GET",
+        url: url + "/user/getusername?userID=" + userID,
+        success: function(msg) {
+            $("#welcomeName").append(msg + "! ");
+            let summaryLink = $("<a href=\"#\" id=\"mySummaryLink\">View Your Activity Summary</a>");
+            $("#welcomeName").append(summaryLink);
+            $("#mySummaryLink").click(function(){
+                console.log("Here");
+                $.ajax({
+                    type: "GET",
+                    url: url + "/user/getusername?userID=" + userID,
+                    success: function(msg) {
+                        $("#summaryHeader").text(msg + "\'s Achievement Summary");
+                        $("#totalMileHead").text(msg + "\'s Total Mileage: ");
+                        $("#bestPaceHead").text(msg + "\'s Fastest Pace: ");
+                        $.ajax({
+                            type: "GET",
+                            url: url + "/summary/get?userID=" + userID,
+                            success: function(msg) {
+                                if(msg=="No available data on user"){
+                                    $("#totalMile").text("---");
+                                    $("#bestPace").text("---");
+                                } else{
+                                    $("#totalMile").text(msg.substring(msg.indexOf(':') + 1, msg.indexOf('Q')) + "Miles");
+                                    let newMsg = msg.substring(msg.indexOf(':') + 1, msg.length);
+                                    $("#bestPace").text(newMsg.substring(newMsg.indexOf(':') + 1, newMsg.length) + " per Mile");
+                                }
+                            }
+                        });
+                    }
+                });
+                $("#summaryModal").modal('show');
+            });
+        }
+    });
+
     getIndividualPosts();
     $("#individual-posts").show();
 
@@ -26,35 +63,6 @@ $(document).ready(function() {
 
     $("#logoutButton").click(function(){
         document.location.href = url + "/";
-    });
-
-    //link to summaryModal
-    $("#testButton").click(function(){
-        var name = "";
-        $.ajax({
-            type: "GET",
-            url: url + "/user/getusername?userID=" + userID,
-            success: function(msg) {
-                $("#summaryHeader").text(msg + "\'s Achievement Summary");
-                $("#totalMileHead").text(msg + "\'s Total Mileage: ");
-                $("#bestPaceHead").text(msg + "\'s Fastest Pace: ");
-                $.ajax({
-                    type: "GET",
-                    url: url + "/summary/get?userID=" + userID,
-                    success: function(msg) {
-                        if(msg=="No available data on user"){
-                            $("#totalMile").text("---");
-                            $("#bestPace").text("---");
-                        } else{
-                            $("#totalMile").text(msg.substring(msg.indexOf(':') + 1, msg.indexOf('Q')) + "Miles");
-                            let newMsg = msg.substring(msg.indexOf(':') + 1, msg.length);
-                            $("#bestPace").text(newMsg.substring(newMsg.indexOf(':') + 1, newMsg.length) + " per Mile");
-                        }
-                    }
-                });
-            }
-        });
-        $("#summaryModal").modal('show');
     });
 
     //create new activity
@@ -182,7 +190,7 @@ $(document).ready(function() {
                         $("#post-div-" + _post.post.postID.toString()).append(new_activity_label);
 
                         new_activity_label = $("<div class='extra text'></div>");
-                        new_activity_label.text("Distance: " + _post.post.activity.distance.toString());
+                        new_activity_label.text("Distance: " + _post.post.activity.distance.toString() + " Miles");
                         new_activity_label.attr("id", "activity-label-distance");
                         $("#post-div-" + _post.post.postID.toString()).append(new_activity_label);
 
@@ -302,6 +310,39 @@ $(document).ready(function() {
                                     new_activity_label.attr("id", "post-user");
                                     $("#g-" + groupID + "-" + "post-div-" + _post.post.postID.toString()).append(new_activity_label);
 
+                                    let summaryLink = $("<a href=\"#\">View Activity Summary</a>");
+                                    let summaryID = "summaryLink" + _post.post.activity.userID;
+                                    summaryLink.attr("id", summaryID);
+                                    $("#g-" + groupID + "-" + "post-div-" + _post.post.postID.toString()).append(summaryLink);
+
+                                    $("#summaryLink" + _post.post.activity.userID).click(function(){
+                                        console.log("here" + _post.post.activity.userID);
+                                        $.ajax({
+                                            type: "GET",
+                                            url: url + "/user/getusername?userID=" + _post.post.activity.userID,
+                                            success: function(msg) {
+                                                $("#summaryHeader").text(msg + "\'s Achievement Summary");
+                                                $("#totalMileHead").text(msg + "\'s Total Mileage: ");
+                                                $("#bestPaceHead").text(msg + "\'s Fastest Pace: ");
+                                                $.ajax({
+                                                    type: "GET",
+                                                    url: url + "/summary/get?userID=" + _post.post.activity.userID,
+                                                    success: function(msg) {
+                                                        if(msg=="No available data on user"){
+                                                            $("#totalMile").text("---");
+                                                            $("#bestPace").text("---");
+                                                        } else{
+                                                            $("#totalMile").text(msg.substring(msg.indexOf(':') + 1, msg.indexOf('Q')) + "Miles");
+                                                            let newMsg = msg.substring(msg.indexOf(':') + 1, msg.length);
+                                                            $("#bestPace").text(newMsg.substring(newMsg.indexOf(':') + 1, newMsg.length) + " per Mile");
+                                                        }
+                                                    }
+                                                });
+                                            }
+                                        });
+                                        $("#summaryModal").modal('show');
+                                    });
+
                                     new_activity_label = $("<label></label>");
                                     new_activity_label.text("Title: " + _post.post.activity.title);
                                     new_activity_label.attr("id", "activity-label-title");
@@ -319,7 +360,7 @@ $(document).ready(function() {
                                     $("#g-" + groupID + "-" + "post-div-" + _post.post.postID.toString()).append(text_break);
 
                                     new_activity_label = $("<label></label>");
-                                    new_activity_label.text("Distance: " + _post.post.activity.distance.toString());
+                                    new_activity_label.text("Distance: " + _post.post.activity.distance.toString() + " Miles");
                                     new_activity_label.attr("id", "activity-label-distance");
                                     $("#g-" + groupID + "-" + "post-div-" + _post.post.postID.toString()).append(new_activity_label);
 
@@ -573,5 +614,4 @@ $(document).ready(function() {
                 }
             })
     });
-    
 });
