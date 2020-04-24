@@ -278,29 +278,6 @@ $(document).ready(function() {
                         });
                         $("#post-div-" + _post.post.postID.toString()).append(delete_button);
 
-                        //Update Activity Button
-                        var update_button = $("<button></button>");
-                        update_button.text("Update Activity");
-                        update_button.attr("id", "update-button-" + _post.post.postID.toString());
-
-                        update_button.click(function () {
-                            $("#activityTitle").val(_post.post.activity.title);
-                            $("#activityDescription").val(_post.post.activity.description);
-                            $("#activityDistance").val(_post.post.activity.distance);
-                            $("#activityHours").val(_post.post.activity.hours);
-                            $("#activityMinutes").val(_post.post.activity.minutes);
-                            $("#activitySeconds").val(_post.post.activity.seconds);
-
-                            $("#getActivityID").text(_post.post.activity.activityID);
-
-                            $("#activityModalHeader").text("Update Activity");
-                            $("#submitActivity").text("Submit Update");
-
-                            $("#createActivityModal").modal('show');
-                        });
-                        $("#post-div-" + _post.post.postID.toString()).append(update_button);
-                        //End Activity Update
-
                         text_break = $("<br>");
                         $("#post-div-" + _post.post.postID.toString()).append(text_break);
 
@@ -370,10 +347,6 @@ $(document).ready(function() {
                             text_break = $("<br>");
                             $("#comment-" + _post.post.postID.toString() + "-" + commentArray.indexOf(comment)).append(text_break);
                         }
-
-                        text_break = $("<br><br>");
-                        $("#post-div-" + _post.post.postID.toString()).append(text_break);
-
                     }
                 },
                 error: function () {
@@ -541,31 +514,6 @@ $(document).ready(function() {
                                         })
                                     });
                                     $("#g-" + groupID + "-" + "post-div-" + _post.post.postID.toString()).append(delete_button);
-
-                                    if(_post.post.activity.userID == userID) {
-                                        //Update Activity Button
-                                        var update_button = $("<button></button>");
-                                        update_button.text("Update Activity");
-                                        update_button.attr("id", "g-" + groupID + "update-button-" + _post.post.postID.toString());
-
-                                        update_button.click(function () {
-                                            $("#activityTitle").val(_post.post.activity.title);
-                                            $("#activityDescription").val(_post.post.activity.description);
-                                            $("#activityDistance").val(_post.post.activity.distance);
-                                            $("#activityHours").val(_post.post.activity.hours);
-                                            $("#activityMinutes").val(_post.post.activity.minutes);
-                                            $("#activitySeconds").val(_post.post.activity.seconds);
-
-                                            $("#getActivityID").text(_post.post.activity.activityID);
-
-                                            $("#activityModalHeader").text("Update Activity");
-                                            $("#submitActivity").text("Submit Update");
-
-                                            $("#createActivityModal").modal('show');
-                                        });
-                                        $("#g-" + groupID + "-" + "post-div-" + _post.post.postID.toString()).append(update_button);
-                                        //End Activity Update
-                                    }
 
                                     text_break = $("<br>");
                                     $("#g-" + groupID + "-" + "post-div-" + _post.post.postID.toString()).append(text_break);
