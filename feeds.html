@@ -7,6 +7,22 @@
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/fomantic-ui@2.8.4/dist/semantic.min.css">
     <script src="https://cdn.jsdelivr.net/npm/fomantic-ui@2.8.4/dist/semantic.min.js"></script>
     <script src="feeds-script.js"></script>
+
+    <style>
+        #menu {
+            margin: 0px 0px 0px 0px;
+            padding: 0px 0px 0px 0px;
+        }
+
+        #summaryDiv {
+            margin: 0px 0px 0px 20px;
+            padding: 10px 0px 10px 0px;
+        }
+        #welcomeName {
+            margin: 0px 0px 0px 0px;
+            padding: 0px 0px 0px 0px;
+        }
+    </style>
 </head>
 <body>
 <h1 align="center" class="ui header">
@@ -17,7 +33,7 @@
 <!--Hidden span used to getUserID-->
 <span style="display: none;" id="getUserID" th:text="${userID}"></span>
 <!--Menu-->
-<div class = "ui  menu">
+<div class = "ui menu" id="menu">
     <div class = "active item">
         <select class = "ui dropdown" id="page-selector" name="pages">
             <option value="individual-feed" id="individual-feed-option">Individual Feed</option>
