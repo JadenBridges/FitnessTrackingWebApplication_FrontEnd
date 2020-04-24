@@ -255,6 +255,71 @@ $(document).ready(function() {
                         });
                         $("#post-div-" + _post.post.postID.toString()).append(delete_button);
 
+                        text_break = $("<br>");
+                        $("#post-div-" + _post.post.postID.toString()).append(text_break);
+
+                        var comment_section = $("<comment-section></comment-section>");
+                        comment_section.attr("id", "comment-section-" + _post.post.postID.toString());
+                        $("#post-div-" + _post.post.postID.toString()).append(comment_section);
+
+                        var new_comment = $("<textarea></textarea>");
+                        new_comment.attr("id", "new-comment-" + _post.post.postID.toString());
+                        new_comment.attr("placeholder", "Type your comment here!");
+                        $("#comment-section-" + _post.post.postID.toString()).append(new_comment);
+
+                        var new_comment_button = $("<button></button>");
+                        new_comment_button.text("Add Comment");
+                        new_comment_button.attr("id", "comment-button-" + _post.post.postID.toString());
+                        $("#comment-section-" + _post.post.postID.toString()).append(new_comment_button);
+                        new_comment_button.click(function() {
+                            var entered_text = document.getElementById("new-comment-" + _post.post.postID.toString()).value;
+                            let data = {postID : _post.post.postID, userID : userID, message : entered_text};
+                            $.ajax({
+                                url: url + "/individualfeed/comment-post",
+                                data: JSON.stringify(data),
+                                dataType: "json",
+                                contentType: "application/json; charset=utf-8",
+                                method: 'POST',
+                                success: function(val) {
+                                    if (val == 0) {
+                                        var temp_comment = $("<user_comment></user_comment>");
+                                        temp_comment.text("You said \"" + entered_text + "\"");
+                                        temp_comment.attr("id", "temp-comment-" + _post.post.postID.toString());
+                                        $("#user-comments-" + _post.post.postID.toString()).append(temp_comment);
+                                        document.getElementById("new-comment-" + _post.post.postID.toString()).value = "";
+                                    }
+                                    else
+                                        alert("Error in commenting on post");
+                                },
+                                error: function() {
+                                    alert("Error in liking post");
+                                }
+                            })
+                        });
+
+
+                        text_break = $("<br>");
+                        $("#comment-section-" + _post.post.postID.toString()).append(text_break);
+
+                        var user_comments = $("<user-comments></user-comments>");
+                        user_comments.attr("id", "user-comments-" + _post.post.postID.toString());
+                        $("#comment-section-" + _post.post.postID.toString()).append(user_comments);
+
+                        var commentArray = _post.comments;
+                        for(const comment of commentArray)
+                        {
+                            var comment_label = $("<user-comment></user-comment>");
+                            if (comment.userDTO.userID == userID)
+                                comment_label.text("You said \"" + comment.message + "\"");
+                            else
+                                comment_label.text(comment.userDTO.username + " said \"" + comment.message + "\"");
+                            comment_label.attr("id", "comment-" + _post.post.postID.toString() + "-" + commentArray.indexOf(comment));
+                            $("#user-comments-" + _post.post.postID.toString()).append(comment_label);
+
+                            text_break = $("<br>");
+                            $("#comment-" + _post.post.postID.toString() + "-" + commentArray.indexOf(comment)).append(text_break);
+                        }
+
                         //Update Activity Button
                         var update_button = $("<button></button>");
                         update_button.text("Update Activity");
@@ -433,20 +498,20 @@ $(document).ready(function() {
                                     $("#g-" + groupID + "-" + "post-div-" + _post.post.postID.toString()).append(text_break);
 
                                     var comment_section = $("<comment-section></comment-section>");
-                                    comment_section.attr("id", "comment-section-" + _post.post.postID.toString());
+                                    comment_section.attr("id", "g-" + groupID + "-comment-section-" + _post.post.postID.toString());
                                     $("#g-" + groupID + "-" + "post-div-" + _post.post.postID.toString()).append(comment_section);
 
                                     var new_comment = $("<textarea></textarea>");
-                                    new_comment.attr("id", "new-comment-" + _post.post.postID.toString());
+                                    new_comment.attr("id", "g-" + groupID + "-new-comment-" + _post.post.postID.toString());
                                     new_comment.attr("placeholder", "Type your comment here!");
-                                    $("#comment-section-" + _post.post.postID.toString()).append(new_comment);
+                                    $("#g-" + groupID + "-comment-section-" + _post.post.postID.toString()).append(new_comment);
 
                                     var new_comment_button = $("<button></button>");
                                     new_comment_button.text("Add Comment");
-                                    new_comment_button.attr("id", "comment-button-" + _post.post.postID.toString());
-                                    $("#comment-section-" + _post.post.postID.toString()).append(new_comment_button);
+                                    new_comment_button.attr("id", "g-" + groupID + "-comment-button-" + _post.post.postID.toString());
+                                    $("#g-" + groupID + "-comment-section-" + _post.post.postID.toString()).append(new_comment_button);
                                     new_comment_button.click(function() {
-                                        var entered_text = document.getElementById("new-comment-" + _post.post.postID.toString()).value;
+                                        var entered_text = document.getElementById("g-" + groupID + "-new-comment-" + _post.post.postID.toString()).value;
                                         let data = {postID : _post.post.postID, userID : userID, message : entered_text};
                                         $.ajax({
                                             url: url + "/groupfeed/comment-post",
@@ -456,11 +521,14 @@ $(document).ready(function() {
                                             method: 'POST',
                                             success: function(val) {
                                                 if (val == 0) {
-                                                    alert("You left a comment!");
-
+                                                    var temp_comment = $("<user_comment></user_comment>");
+                                                    temp_comment.text("You said \"" + entered_text + "\"");
+                                                    temp_comment.attr("id", "g-" + groupID + "-temp-comment-" + _post.post.postID.toString());
+                                                    $("#g-" + groupID + "-user-comments-" + _post.post.postID.toString()).append(temp_comment);
+                                                    document.getElementById("g-" + groupID + "-new-comment-" + _post.post.postID.toString()).value = "";
                                                 }
                                                 else
-                                                    alert("You did not leave a comment!");
+                                                    alert("Error in commenting on post");
                                             },
                                             error: function() {
                                                 alert("Error in liking post");
@@ -470,29 +538,32 @@ $(document).ready(function() {
 
 
                                     text_break = $("<br>");
-                                    $("#comment-section-" + _post.post.postID.toString()).append(text_break);
+                                    $("#g-" + groupID + "-comment-section-" + _post.post.postID.toString()).append(text_break);
 
                                     var user_comments = $("<user-comments></user-comments>");
-                                    user_comments.attr("id", "user-comments-" + _post.post.postID.toString());
-                                    $("#comment-section-" + _post.post.postID.toString()).append(user_comments);
+                                    user_comments.attr("id", "g-" + groupID + "-user-comments-" + _post.post.postID.toString());
+                                    $("#g-" + groupID + "-comment-section-" + _post.post.postID.toString()).append(user_comments);
 
                                     var commentArray = _post.comments;
                                     for(const comment of commentArray)
                                     {
                                         var comment_label = $("<user-comment></user-comment>");
-                                        comment_label.text(comment.userDTO.username + " says \"" + comment.message + "\"");
-                                        comment_label.attr("id", "comment-" + _post.post.postID.toString() + "-" + commentArray.indexOf(comment));
-                                        $("#user-comments-" + _post.post.postID.toString()).append(comment_label);
+                                        if (comment.userDTO.userID == userID)
+                                            comment_label.text("You said \"" + comment.message + "\"");
+                                        else
+                                            comment_label.text(comment.userDTO.username + " said \"" + comment.message + "\"");
+                                        comment_label.attr("id", "g-" + groupID + "-comment-" + _post.post.postID.toString() + "-" + commentArray.indexOf(comment));
+                                        $("#g-" + groupID + "-user-comments-" + _post.post.postID.toString()).append(comment_label);
 
                                         text_break = $("<br>");
-                                        $("#comment-" + _post.post.postID.toString() + "-" + commentArray.indexOf(comment)).append(text_break);
+                                        $("#g-" + groupID + "-comment-" + _post.post.postID.toString() + "-" + commentArray.indexOf(comment)).append(text_break);
                                     }
-                                    
+
                                     if(_post.post.activity.userID == userID) {
                                         //Update Activity Button
                                         var update_button = $("<button></button>");
                                         update_button.text("Update Activity");
-                                        update_button.attr("id", "update-button-" + _post.post.postID.toString());
+                                        update_button.attr("id", "g-" + groupID + "update-button-" + _post.post.postID.toString());
 
                                         update_button.click(function () {
                                             $("#activityTitle").val(_post.post.activity.title);
