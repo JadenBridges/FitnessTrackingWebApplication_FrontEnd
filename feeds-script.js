@@ -232,6 +232,29 @@ $(document).ready(function() {
                         let text_break = $("<br>");
                         $("#post-div-" + _post.post.postID.toString()).append(text_break);
 
+                        //Update Activity Button
+                        var update_button = $("<button></button>");
+                        update_button.text("Update Post");
+                        update_button.attr("id", "update-button-" + _post.post.postID.toString());
+
+                        update_button.click(function () {
+                            $("#activityTitle").val(_post.post.activity.title);
+                            $("#activityDescription").val(_post.post.activity.description);
+                            $("#activityDistance").val(_post.post.activity.distance);
+                            $("#activityHours").val(_post.post.activity.hours);
+                            $("#activityMinutes").val(_post.post.activity.minutes);
+                            $("#activitySeconds").val(_post.post.activity.seconds);
+
+                            $("#getActivityID").text(_post.post.activity.activityID);
+
+                            $("#activityModalHeader").text("Update Activity");
+                            $("#submitActivity").text("Submit Update");
+
+                            $("#createActivityModal").modal('show');
+                        });
+                        $("#post-div-" + _post.post.postID.toString()).append(update_button);
+                        //End Activity Update
+
                         var delete_button = $("<button></button>");
                         delete_button.text("Delete Post");
                         delete_button.attr("id", "delete-button-" + _post.post.postID.toString());
@@ -266,6 +289,8 @@ $(document).ready(function() {
                         new_comment.attr("id", "new-comment-" + _post.post.postID.toString());
                         new_comment.attr("placeholder", "Type your comment here!");
                         $("#comment-section-" + _post.post.postID.toString()).append(new_comment);
+                        text_break = $("<br>");
+                        $("#comment-section-" + _post.post.postID.toString()).append(text_break);
 
                         var new_comment_button = $("<button></button>");
                         new_comment_button.text("Add Comment");
@@ -306,8 +331,7 @@ $(document).ready(function() {
                         $("#comment-section-" + _post.post.postID.toString()).append(user_comments);
 
                         var commentArray = _post.comments;
-                        for(const comment of commentArray)
-                        {
+                        for(const comment of commentArray) {
                             var comment_label = $("<user-comment></user-comment>");
                             if (comment.userDTO.userID == userID)
                                 comment_label.text("You said \"" + comment.message + "\"");
@@ -319,32 +343,8 @@ $(document).ready(function() {
                             text_break = $("<br>");
                             $("#comment-" + _post.post.postID.toString() + "-" + commentArray.indexOf(comment)).append(text_break);
                         }
-
-                        //Update Activity Button
-                        var update_button = $("<button></button>");
-                        update_button.text("Update Activity");
-                        update_button.attr("id", "update-button-" + _post.post.postID.toString());
-
-                        update_button.click(function () {
-                            $("#activityTitle").val(_post.post.activity.title);
-                            $("#activityDescription").val(_post.post.activity.description);
-                            $("#activityDistance").val(_post.post.activity.distance);
-                            $("#activityHours").val(_post.post.activity.hours);
-                            $("#activityMinutes").val(_post.post.activity.minutes);
-                            $("#activitySeconds").val(_post.post.activity.seconds);
-
-                            $("#getActivityID").text(_post.post.activity.activityID);
-
-                            $("#activityModalHeader").text("Update Activity");
-                            $("#submitActivity").text("Submit Update");
-
-                            $("#createActivityModal").modal('show');
-                        });
-                        $("#post-div-" + _post.post.postID.toString()).append(update_button);
-                        //End Activity Update
-
-                        text_break = $("<br><br>");
-                        $("#post-div-" + _post.post.postID.toString()).append(text_break);
+                        // text_break = $("<br><br>");
+                        // $("#post-div-" + _post.post.postID.toString()).append(text_break);
                     }
                 },
                 error: function () {
@@ -375,7 +375,7 @@ $(document).ready(function() {
                                     new_activity_label.attr("id", "post-user");
                                     $("#g-" + groupID + "-" + "post-div-" + _post.post.postID.toString()).append(new_activity_label);
 
-                                    let summaryLink = $("<a href=\"#\">View Activity Summary</a>");
+                                    let summaryLink = $("<a href=\"#\">View " + uname + "\'s Activity Summary</a>");
                                     let summaryID = "summaryLink" + _post.post.activity.userID;
                                     summaryLink.attr("id", summaryID);
                                     $("#g-" + groupID + "-" + "post-div-" + _post.post.postID.toString()).append(summaryLink);
@@ -469,6 +469,33 @@ $(document).ready(function() {
                                        })
                                     });
                                     $("#g-" + groupID + "-" + "post-div-" + _post.post.postID.toString()).append(like_button);
+                                    text_break = $("<br>");
+                                    $("#g-" + groupID + "-" + "post-div-" + _post.post.postID.toString()).append(text_break);
+
+                                    if(_post.post.activity.userID == userID) {
+                                        //Update Activity Button
+                                        var update_button = $("<button></button>");
+                                        update_button.text("Update Post");
+                                        update_button.attr("id", "g-" + groupID + "update-button-" + _post.post.postID.toString());
+
+                                        update_button.click(function () {
+                                            $("#activityTitle").val(_post.post.activity.title);
+                                            $("#activityDescription").val(_post.post.activity.description);
+                                            $("#activityDistance").val(_post.post.activity.distance);
+                                            $("#activityHours").val(_post.post.activity.hours);
+                                            $("#activityMinutes").val(_post.post.activity.minutes);
+                                            $("#activitySeconds").val(_post.post.activity.seconds);
+
+                                            $("#getActivityID").text(_post.post.activity.activityID);
+
+                                            $("#activityModalHeader").text("Update Activity");
+                                            $("#submitActivity").text("Submit Update");
+
+                                            $("#createActivityModal").modal('show');
+                                        });
+                                        $("#g-" + groupID + "-" + "post-div-" + _post.post.postID.toString()).append(update_button);
+                                        //End Activity Update
+                                    }
 
                                     var delete_button = $("<button></button>");
                                     delete_button.text("Delete Post");
@@ -505,6 +532,8 @@ $(document).ready(function() {
                                     new_comment.attr("id", "g-" + groupID + "-new-comment-" + _post.post.postID.toString());
                                     new_comment.attr("placeholder", "Type your comment here!");
                                     $("#g-" + groupID + "-comment-section-" + _post.post.postID.toString()).append(new_comment);
+                                    text_break = $("<br>");
+                                    $("#g-" + groupID + "-comment-section-" + _post.post.postID.toString()).append(text_break);
 
                                     var new_comment_button = $("<button></button>");
                                     new_comment_button.text("Add Comment");
@@ -557,31 +586,6 @@ $(document).ready(function() {
 
                                         text_break = $("<br>");
                                         $("#g-" + groupID + "-comment-" + _post.post.postID.toString() + "-" + commentArray.indexOf(comment)).append(text_break);
-                                    }
-
-                                    if(_post.post.activity.userID == userID) {
-                                        //Update Activity Button
-                                        var update_button = $("<button></button>");
-                                        update_button.text("Update Activity");
-                                        update_button.attr("id", "g-" + groupID + "update-button-" + _post.post.postID.toString());
-
-                                        update_button.click(function () {
-                                            $("#activityTitle").val(_post.post.activity.title);
-                                            $("#activityDescription").val(_post.post.activity.description);
-                                            $("#activityDistance").val(_post.post.activity.distance);
-                                            $("#activityHours").val(_post.post.activity.hours);
-                                            $("#activityMinutes").val(_post.post.activity.minutes);
-                                            $("#activitySeconds").val(_post.post.activity.seconds);
-
-                                            $("#getActivityID").text(_post.post.activity.activityID);
-
-                                            $("#activityModalHeader").text("Update Activity");
-                                            $("#submitActivity").text("Submit Update");
-
-                                            $("#createActivityModal").modal('show');
-                                        });
-                                        $("#g-" + groupID + "-" + "post-div-" + _post.post.postID.toString()).append(update_button);
-                                        //End Activity Update
                                     }
 
                                     text_break = $("<br><br>");
