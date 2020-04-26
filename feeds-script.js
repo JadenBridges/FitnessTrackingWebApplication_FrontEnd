@@ -308,11 +308,21 @@ $(document).ready(function() {
                                 method: 'POST',
                                 success: function(val) {
                                     if (val == 0) {
-                                        var temp_comment = $("<user_comment></user_comment>");
-                                        temp_comment.text("You said \"" + entered_text + "\"");
+                                        var temp_comment_user = $("<strong></strong>");
+                                        temp_comment_user.text("You said ");
+                                        temp_comment_user.attr("id", "temp-comment-user-" + _post.post.postID.toString());
+                                        $("#user-comments-" + _post.post.postID.toString()).append(temp_comment_user);
+
+                                        text_break = $("<br>");
+                                        $("#user-comments-" + _post.post.postID.toString()).append(text_break);
+
+                                        var temp_comment = $("<user-comment></user-comment>");
+                                        temp_comment.text("\"" + entered_text + "\"");
                                         temp_comment.attr("id", "temp-comment-" + _post.post.postID.toString());
                                         $("#user-comments-" + _post.post.postID.toString()).append(temp_comment);
+
                                         document.getElementById("new-comment-" + _post.post.postID.toString()).value = "";
+
                                         text_break = $("<br>");
                                         $("#user-comments-" + _post.post.postID.toString()).append(text_break);
                                     }
@@ -335,11 +345,19 @@ $(document).ready(function() {
 
                         var commentArray = _post.comments;
                         for(const comment of commentArray) {
-                            var comment_label = $("<user-comment></user-comment>");
+                            var comment_user = $("<strong></strong>");
                             if (comment.userDTO.userID == userID)
-                                comment_label.text("You said \"" + comment.message + "\"");
+                                comment_user.text("You said ");
                             else
-                                comment_label.text(comment.userDTO.username + " said \"" + comment.message + "\"");
+                                comment_user.text(comment.userDTO.username + " said ");
+                            comment_user.attr("id", "comment-user-" + _post.post.postID.toString() + "-" + commentArray.indexOf(comment));
+                            $("#user-comments-" + _post.post.postID.toString()).append(comment_user);
+
+                            text_break = $("<br>");
+                            $("#user-comments-" + _post.post.postID.toString()).append(text_break);
+
+                            var comment_label = $("<user-comment></user-comment>");
+                                comment_label.text("\"" + comment.message + "\"");
                             comment_label.attr("id", "comment-" + _post.post.postID.toString() + "-" + commentArray.indexOf(comment));
                             $("#user-comments-" + _post.post.postID.toString()).append(comment_label);
 
@@ -558,11 +576,20 @@ $(document).ready(function() {
                                             method: 'POST',
                                             success: function(val) {
                                                 if (val == 0) {
-                                                    var temp_comment = $("<user_comment></user_comment>");
-                                                    temp_comment.text("You said \"" + entered_text + "\"");
+                                                    var temp_comment_user = $("<strong></strong>");
+                                                    temp_comment_user.text("You said ");
+                                                    temp_comment_user.attr("id", "g-" + groupID + "-temp-comment-user-" + _post.post.postID.toString());
+                                                    $("#g-" + groupID + "-user-comments-" + _post.post.postID.toString()).append(temp_comment_user);
+
+                                                    text_break = $("<br>");
+                                                    $("#g-" + groupID + "-user-comments-" + _post.post.postID.toString()).append(text_break);
+
+                                                    var temp_comment = $("<user-comment></user-comment>");
+                                                    temp_comment.text("\"" + entered_text + "\"");
                                                     temp_comment.attr("id", "g-" + groupID + "-temp-comment-" + _post.post.postID.toString());
                                                     $("#g-" + groupID + "-user-comments-" + _post.post.postID.toString()).append(temp_comment);
                                                     document.getElementById("g-" + groupID + "-new-comment-" + _post.post.postID.toString()).value = "";
+
                                                     text_break = $("<br>");
                                                     $("#g-" + groupID + "-user-comments-" + _post.post.postID.toString()).append(text_break);
                                                 }
@@ -586,11 +613,19 @@ $(document).ready(function() {
                                     var commentArray = _post.comments;
                                     for(const comment of commentArray)
                                     {
-                                        var comment_label = $("<user-comment></user-comment>");
+                                        var comment_user = $("<strong></strong>");
                                         if (comment.userDTO.userID == userID)
-                                            comment_label.text("You said \"" + comment.message + "\"");
+                                            comment_user.text("You said ");
                                         else
-                                            comment_label.text(comment.userDTO.username + " said \"" + comment.message + "\"");
+                                            comment_user.text(comment.userDTO.username + " said ");
+                                        comment_user.attr("id", "g-" + groupID + "-comment-user-" + _post.post.postID.toString() + "-" + commentArray.indexOf(comment));
+                                        $("#g-" + groupID + "-user-comments-" + _post.post.postID.toString()).append(comment_user);
+
+                                        text_break = $("<br>");
+                                        $("#g-" + groupID + "-user-comments-" + _post.post.postID.toString()).append(text_break);
+
+                                        var comment_label = $("<user-comment></user-comment>");
+                                        comment_label.text("\"" + comment.message + "\"");
                                         comment_label.attr("id", "g-" + groupID + "-comment-" + _post.post.postID.toString() + "-" + commentArray.indexOf(comment));
                                         $("#g-" + groupID + "-user-comments-" + _post.post.postID.toString()).append(comment_label);
 
