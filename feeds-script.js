@@ -175,7 +175,7 @@ $(document).ready(function() {
                 success: function (posts) {
                     for (const _post of posts) {
                         // create a new div that a single post can be placed into
-                        let new_post_div = $("<div class='content' style='border: 1px solid black; background-color: lightgray;'></div>");
+                        let new_post_div = $("<div class='content post'></div>");
                         new_post_div.attr("id", "post-div-" + _post.post.postID.toString());
                         $("#individual-posts").append(new_post_div);
 
@@ -236,6 +236,7 @@ $(document).ready(function() {
                         var update_button = $("<button></button>");
                         update_button.text("Update Post");
                         update_button.attr("id", "update-button-" + _post.post.postID.toString());
+                        update_button.attr("class", "ui button primary post-button");
 
                         update_button.click(function () {
                             $("#activityTitle").val(_post.post.activity.title);
@@ -360,7 +361,7 @@ $(document).ready(function() {
                 success: function (posts) {
                     for (const _post of posts) {
                         // create a new div that a single post can be placed into
-                        let new_post_div = $("<div class='content' style='border: 1px solid black; background-color: lightgray;'></div>");//$("<post></post>");
+                        let new_post_div = $("<div class='content post'></div>");//$("<post></post>");
                         new_post_div.attr("id", "g-" + groupID + "-" + "post-div-" + _post.post.postID.toString());
                         $("#group-div-" + groupID).append(new_post_div);
                         var postUserID = _post.post.activity.userID;

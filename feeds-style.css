@@ -1,0 +1,9 @@
+.post {
+    border: 1px solid black;
+    background-color: lightgray;
+    padding: 0px 10px;
+    margin: 0px 10px;
+}
+
+.post-button {
+}
