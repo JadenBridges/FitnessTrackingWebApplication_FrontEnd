@@ -749,6 +749,7 @@ $(document).ready(function() {
 
     // add a user to a group
     $("#add-user-button").click(function(){
+        console.log("add user tapped");
         // get the username from the input text field
         let username = document.getElementById("username-field").value;
         // convert the username to a userID
@@ -760,8 +761,8 @@ $(document).ready(function() {
                     $.post('/groupfeed/adduser?userID=' + response.toString() + '&groupID=' + current_groupID.toString(),
                         function(data, status) {
                             alert(username + " successfully added to Group " + current_groupID + "!");
+                            location.reload(true);
                         });
-                    location.reload(true);
                 }
             })
     });
@@ -781,9 +782,9 @@ $(document).ready(function() {
                         method: 'PUT',
                         success: function(data) {
                             alert(username + " successfully removed from Group " + current_groupID + "!");
+                            location.reload(true);
                         }
                     })
-                    location.reload(true);
                 }
             })
     });
