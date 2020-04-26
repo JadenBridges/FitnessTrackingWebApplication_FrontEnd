@@ -179,29 +179,36 @@ $(document).ready(function() {
                         new_post_div.attr("id", "post-div-" + _post.post.postID.toString());
                         $("#individual-posts").append(new_post_div);
 
-                        let new_activity_label = $("<div class='extra text' style='font-weight: bold;'></div>");
+                        let new_activity_label = $("<div class='post-text post-title' style='font-weight: bold;'></div>");
                         new_activity_label.text(_post.post.activity.title);
                         new_activity_label.attr("id", "activity-label-title");
                         $("#post-div-" + _post.post.postID.toString()).append(new_activity_label);
 
-                        new_activity_label = $("<div class='extra text'></div>");
+                        new_activity_label = $("<div class='post-text'></div>");
                         new_activity_label.text(_post.post.activity.description);
                         new_activity_label.attr("id", "activity-label-description");
                         $("#post-div-" + _post.post.postID.toString()).append(new_activity_label);
 
-                        new_activity_label = $("<div class='extra text'></div>");
+                        text_break = $("<br>");
+                        $("#post-div-" + _post.post.postID.toString()).append(text_break);
+
+                        new_activity_label = $("<div class='post-text'></div>");
                         new_activity_label.text("Distance: " + _post.post.activity.distance.toString() + " Miles");
                         new_activity_label.attr("id", "activity-label-distance");
                         $("#post-div-" + _post.post.postID.toString()).append(new_activity_label);
 
-                        new_activity_label = $("<div class='extra text'></div>");
+                        new_activity_label = $("<div class='post-text'></div>");
                         new_activity_label.text("Time Elapsed: " + (_post.post.activity.hours.toString() == "0" ? "" : _post.post.activity.hours.toString() + ":") +
                             ("0" + _post.post.activity.minutes).slice(-2) + ":" +
                             ("0" + _post.post.activity.seconds).slice(-2));
                         new_activity_label.attr("id", "activity-label-time_elapsed");
                         $("#post-div-" + _post.post.postID.toString()).append(new_activity_label);
 
-                        var like_span = $("<span style='white-space: nowrap;'></span>");
+                        text_break = $("<br>");
+                        $("#post-div-" + _post.post.postID.toString()).append(text_break);
+
+                        var like_span = $("<span></span>");
+                        like_span.attr("class", "like-span");
 
                         var like_button = $("<div class='meta' style='display: inline-block;'><a class='like'><i class='like icon red'></i></a></div>");
                         like_button.attr("id","like-button-" + _post.post.postID.toString());
@@ -229,59 +236,6 @@ $(document).ready(function() {
                         like_span.append(new_activity_label);
                         $("#post-div-" + _post.post.postID.toString()).append(like_span);
 
-                        let text_break = $("<br>");
-                        $("#post-div-" + _post.post.postID.toString()).append(text_break);
-
-                        //Update Activity Button
-                        var update_button = $("<button></button>");
-                        update_button.text("Update Post");
-                        update_button.attr("id", "update-button-" + _post.post.postID.toString());
-                        update_button.attr("class", "ui button primary post-button");
-
-                        update_button.click(function () {
-                            $("#activityTitle").val(_post.post.activity.title);
-                            $("#activityDescription").val(_post.post.activity.description);
-                            $("#activityDistance").val(_post.post.activity.distance);
-                            $("#activityHours").val(_post.post.activity.hours);
-                            $("#activityMinutes").val(_post.post.activity.minutes);
-                            $("#activitySeconds").val(_post.post.activity.seconds);
-
-                            $("#getActivityID").text(_post.post.activity.activityID);
-
-                            $("#activityModalHeader").text("Update Activity");
-                            $("#submitActivity").text("Submit Update");
-
-                            $("#createActivityModal").modal('show');
-                        });
-                        $("#post-div-" + _post.post.postID.toString()).append(update_button);
-                        //End Activity Update
-
-                        var delete_button = $("<button></button>");
-                        delete_button.text("Delete Post");
-                        delete_button.attr("id", "delete-button-" + _post.post.postID.toString());
-
-                        delete_button.click(function() {
-                            $.ajax({
-                                url: '/individualfeed/delete-post?postID=' + _post.post.postID + "&userID=" + userID,
-                                method: 'DELETE',
-                                success: function(val) {
-                                    if (val == 1) {
-                                        alert("You deleted your post!");
-                                        document.getElementById("post-div-" + _post.post.postID.toString()).hidden = true;
-                                    }
-                                    else
-                                        alert("You did not delete your post!");
-                                },
-                                error: function() {
-                                    alert("Error in liking post");
-                                }
-                            })
-                        });
-                        $("#post-div-" + _post.post.postID.toString()).append(delete_button);
-
-                        text_break = $("<br>");
-                        $("#post-div-" + _post.post.postID.toString()).append(text_break);
-
                         var comment_section = $("<comment-section></comment-section>");
                         comment_section.attr("id", "comment-section-" + _post.post.postID.toString());
                         $("#post-div-" + _post.post.postID.toString()).append(comment_section);
@@ -290,12 +244,15 @@ $(document).ready(function() {
                         new_comment.attr("id", "new-comment-" + _post.post.postID.toString());
                         new_comment.attr("placeholder", "Type your comment here!");
                         $("#comment-section-" + _post.post.postID.toString()).append(new_comment);
+
                         text_break = $("<br>");
                         $("#comment-section-" + _post.post.postID.toString()).append(text_break);
 
                         var new_comment_button = $("<button></button>");
                         new_comment_button.text("Add Comment");
                         new_comment_button.attr("id", "comment-button-" + _post.post.postID.toString());
+                        new_comment_button.attr("class", "ui primary button inner-post-button");
+
                         $("#comment-section-" + _post.post.postID.toString()).append(new_comment_button);
                         new_comment_button.click(function() {
                             var entered_text = document.getElementById("new-comment-" + _post.post.postID.toString()).value;
@@ -346,6 +303,57 @@ $(document).ready(function() {
                             text_break = $("<br>");
                             $("#comment-" + _post.post.postID.toString() + "-" + commentArray.indexOf(comment)).append(text_break);
                         }
+
+                        text_break = $("<br>");
+                        $("#post-div-" + _post.post.postID.toString()).append(text_break);
+
+                        //Update Activity Button
+                        var update_button = $("<button></button>");
+                        update_button.text("Update Post");
+                        update_button.attr("id", "update-button-" + _post.post.postID.toString());
+                        update_button.attr("class", "ui primary button inner-post-button");
+
+                        update_button.click(function () {
+                            $("#activityTitle").val(_post.post.activity.title);
+                            $("#activityDescription").val(_post.post.activity.description);
+                            $("#activityDistance").val(_post.post.activity.distance);
+                            $("#activityHours").val(_post.post.activity.hours);
+                            $("#activityMinutes").val(_post.post.activity.minutes);
+                            $("#activitySeconds").val(_post.post.activity.seconds);
+
+                            $("#getActivityID").text(_post.post.activity.activityID);
+
+                            $("#activityModalHeader").text("Update Activity");
+                            $("#submitActivity").text("Submit Update");
+
+                            $("#createActivityModal").modal('show');
+                        });
+                        $("#post-div-" + _post.post.postID.toString()).append(update_button);
+                        //End Activity Update
+
+                        var delete_button = $("<button></button>");
+                        delete_button.text("Delete Post");
+                        delete_button.attr("id", "delete-button-" + _post.post.postID.toString());
+                        delete_button.attr("class", "ui button primary inner-post-button");
+
+                        delete_button.click(function() {
+                            $.ajax({
+                                url: '/individualfeed/delete-post?postID=' + _post.post.postID + "&userID=" + userID,
+                                method: 'DELETE',
+                                success: function(val) {
+                                    if (val == 1) {
+                                        alert("You deleted your post!");
+                                        document.getElementById("post-div-" + _post.post.postID.toString()).hidden = true;
+                                    }
+                                    else
+                                        alert("You did not delete your post!");
+                                },
+                                error: function() {
+                                    alert("Error in liking post");
+                                }
+                            })
+                        });
+                        $("#post-div-" + _post.post.postID.toString()).append(delete_button);
                     }
                 },
                 error: function () {
@@ -478,60 +486,6 @@ $(document).ready(function() {
                                     text_break = $("<br>");
                                     $("#g-" + groupID + "-" + "post-div-" + _post.post.postID.toString()).append(text_break);
 
-                                    if(_post.post.activity.userID == userID) {
-                                        //Update Activity Button
-                                        var update_button = $("<button></button>");
-                                        update_button.text("Update Post");
-                                        update_button.attr("id", "g-" + groupID + "update-button-" + _post.post.postID.toString());
-
-                                        update_button.click(function () {
-                                            $("#activityTitle").val(_post.post.activity.title);
-                                            $("#activityDescription").val(_post.post.activity.description);
-                                            $("#activityDistance").val(_post.post.activity.distance);
-                                            $("#activityHours").val(_post.post.activity.hours);
-                                            $("#activityMinutes").val(_post.post.activity.minutes);
-                                            $("#activitySeconds").val(_post.post.activity.seconds);
-
-                                            $("#getActivityID").text(_post.post.activity.activityID);
-
-                                            $("#activityModalHeader").text("Update Activity");
-                                            $("#submitActivity").text("Submit Update");
-
-                                            $("#createActivityModal").modal('show');
-                                        });
-                                        $("#g-" + groupID + "-" + "post-div-" + _post.post.postID.toString()).append(update_button);
-                                        //End Activity Update
-                                    }
-
-                                    if(_post.post.activity.userID == userID){
-                                        var delete_button = $("<button></button>");
-                                        delete_button.text("Delete Post");
-                                        delete_button.attr("id", "delete-button-" + _post.post.postID.toString());
-
-                                        delete_button.click(function() {
-                                            $.ajax({
-                                                url: '/groupfeed/delete-post?postID=' + _post.post.postID + "&userID=" + userID,
-                                                method: 'DELETE',
-                                                success: function(val) {
-                                                    if (val == 1) {
-                                                        alert("You deleted your post!");
-                                                        document.getElementById("g-" + groupID + "-" + "post-div-"
-                                                            + _post.post.postID.toString()).hidden = true;
-                                                    }
-                                                    else
-                                                        alert("You did not delete your post!");
-                                                },
-                                                error: function() {
-                                                    alert("Error in liking post");
-                                                }
-                                            })
-                                        });
-                                        $("#g-" + groupID + "-" + "post-div-" + _post.post.postID.toString()).append(delete_button);
-
-                                        text_break = $("<br>");
-                                        $("#g-" + groupID + "-" + "post-div-" + _post.post.postID.toString()).append(text_break);
-                                    }
-
                                     var comment_section = $("<comment-section></comment-section>");
                                     comment_section.attr("id", "g-" + groupID + "-comment-section-" + _post.post.postID.toString());
                                     $("#g-" + groupID + "-" + "post-div-" + _post.post.postID.toString()).append(comment_section);
@@ -596,6 +550,60 @@ $(document).ready(function() {
 
                                         text_break = $("<br>");
                                         $("#g-" + groupID + "-comment-" + _post.post.postID.toString() + "-" + commentArray.indexOf(comment)).append(text_break);
+                                    }
+
+                                    if(_post.post.activity.userID == userID) {
+                                        //Update Activity Button
+                                        var update_button = $("<button></button>");
+                                        update_button.text("Update Post");
+                                        update_button.attr("id", "g-" + groupID + "update-button-" + _post.post.postID.toString());
+
+                                        update_button.click(function () {
+                                            $("#activityTitle").val(_post.post.activity.title);
+                                            $("#activityDescription").val(_post.post.activity.description);
+                                            $("#activityDistance").val(_post.post.activity.distance);
+                                            $("#activityHours").val(_post.post.activity.hours);
+                                            $("#activityMinutes").val(_post.post.activity.minutes);
+                                            $("#activitySeconds").val(_post.post.activity.seconds);
+
+                                            $("#getActivityID").text(_post.post.activity.activityID);
+
+                                            $("#activityModalHeader").text("Update Activity");
+                                            $("#submitActivity").text("Submit Update");
+
+                                            $("#createActivityModal").modal('show');
+                                        });
+                                        $("#g-" + groupID + "-" + "post-div-" + _post.post.postID.toString()).append(update_button);
+                                        //End Activity Update
+                                    }
+
+                                    if(_post.post.activity.userID == userID){
+                                        var delete_button = $("<button></button>");
+                                        delete_button.text("Delete Post");
+                                        delete_button.attr("id", "delete-button-" + _post.post.postID.toString());
+
+                                        delete_button.click(function() {
+                                            $.ajax({
+                                                url: '/groupfeed/delete-post?postID=' + _post.post.postID + "&userID=" + userID,
+                                                method: 'DELETE',
+                                                success: function(val) {
+                                                    if (val == 1) {
+                                                        alert("You deleted your post!");
+                                                        document.getElementById("g-" + groupID + "-" + "post-div-"
+                                                            + _post.post.postID.toString()).hidden = true;
+                                                    }
+                                                    else
+                                                        alert("You did not delete your post!");
+                                                },
+                                                error: function() {
+                                                    alert("Error in liking post");
+                                                }
+                                            })
+                                        });
+                                        $("#g-" + groupID + "-" + "post-div-" + _post.post.postID.toString()).append(delete_button);
+
+                                        text_break = $("<br>");
+                                        $("#g-" + groupID + "-" + "post-div-" + _post.post.postID.toString()).append(text_break);
                                     }
                                 },
                                 error: function() {

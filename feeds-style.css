@@ -1,3 +1,7 @@
+group {
+    font-size: 16pt;
+}
+
 .post {
     border: 1px solid black;
     background-color: lightgray;
@@ -5,5 +9,22 @@
     margin: 0px 10px;
 }
 
-.post-button {
+.like-span {
+    white-space: nowrap;
+    display: block;
+    margin-bottom: 5px;
+}
+
+.inner-post-button {
+    margin: 10px 3px !important;
+    /*padding-top: 5px !important;*/
+    /*height: 25px !important;*/
+}
+
+.post-text {
+    margin: 5px 0px;
+}
+
+.post-title {
+    font-size: 18pt;
 }
