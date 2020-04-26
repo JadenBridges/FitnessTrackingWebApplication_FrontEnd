@@ -91,7 +91,7 @@ $(document).ready(function() {
                         $("#activityModalHeader").text("Create Activity");
                         $("#submitActivity").text("Submit Activity");
                         $('.ui.modal').modal('hide');
-                        alert("Actvity Updated!");
+                        location.reload(true);
                     }
                 }
             });
@@ -114,7 +114,7 @@ $(document).ready(function() {
                         $("#activityMinutes").val("");
                         $("#activitySeconds").val("");
                         $('.ui.modal').modal('hide');
-                        alert("Actvity Created!");
+                        location.reload(true);
                     }
                 }
             });
@@ -658,6 +658,7 @@ $(document).ready(function() {
                         function(data, status) {
                             alert(username + " successfully added to Group " + current_groupID + "!");
                         });
+                    location.reload(true);
                 }
             })
     });
@@ -679,7 +680,7 @@ $(document).ready(function() {
                             alert(username + " successfully removed from Group " + current_groupID + "!");
                         }
                     })
-
+                    location.reload(true);
                 }
             })
     });
