@@ -3,10 +3,11 @@ group {
 }
 
 .post {
-    border: 1px solid black;
-    background-color: lightgray;
-    padding: 0px 10px;
-    margin: 0px 10px;
+    border: 1px solid #f2be54;
+    border-radius: 10px;
+    background-color: #e0ffff;
+    padding: 10px 10px 10px 10px;
+    margin: 0px 10px 10px 10px;
 }
 
 .like-span {
@@ -25,4 +26,14 @@ group {
 
 .post-title {
     font-size: 18pt;
+}
+
+.post-button {
+}
+
+user-comment {
+    margin-left: 30px;
+}
+
+user-comments {
 }
