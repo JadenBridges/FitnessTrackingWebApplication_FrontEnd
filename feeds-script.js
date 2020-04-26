@@ -203,7 +203,7 @@ $(document).ready(function() {
 
                         var like_span = $("<span style='white-space: nowrap;'></span>");
 
-                        var like_button = $("<div class='meta' style='display: inline-block;'><a class='like'><i class='like icon red'></i></a></div>");
+                        var like_button = $("<div class='meta' style='display: inline-block;'><a class='like'><i class='like icon red large'></i></a></div>");
                         like_button.attr("id","like-button-" + _post.post.postID.toString());
 
                         new_activity_label = $("<label style='display: inline-block;'></label>");
@@ -227,7 +227,23 @@ $(document).ready(function() {
 
                         like_span.append(like_button);
                         like_span.append(new_activity_label);
+
+                        //comment icon
+                        var comment_button = $("<div class='meta' style='display: inline-block; padding-left: 30px;'><a class='like'><i class='comment icon large'></i></a></div>");
+                        comment_button.attr("id","comment-button-" + _post.post.postID.toString());
+
+                        new_activity_label = $("<label style='display: inline-block;'></label>");
+                        new_activity_label.text(_post.comments.length.toString());
+                        new_activity_label.attr("id", "post-label-comment-i" + _post.post.postID.toString());
+
+                        comment_button.click(function() {
+                            comment_section.toggle();
+                        });
+
+                        like_span.append(comment_button);
+                        like_span.append(new_activity_label);
                         $("#post-div-" + _post.post.postID.toString()).append(like_span);
+
 
                         let text_break = $("<br>");
                         $("#post-div-" + _post.post.postID.toString()).append(text_break);
@@ -284,6 +300,7 @@ $(document).ready(function() {
 
                         var comment_section = $("<comment-section></comment-section>");
                         comment_section.attr("id", "comment-section-" + _post.post.postID.toString());
+                        comment_section.hide();
                         $("#post-div-" + _post.post.postID.toString()).append(comment_section);
 
                         var new_comment = $("<textarea></textarea>");
@@ -315,6 +332,7 @@ $(document).ready(function() {
                                         document.getElementById("new-comment-" + _post.post.postID.toString()).value = "";
                                         text_break = $("<br>");
                                         $("#user-comments-" + _post.post.postID.toString()).append(text_break);
+                                        $("#post-label-comment-i" + _post.post.postID.toString()).text(parseInt($("#post-label-comment-i" + _post.post.postID.toString()).text()) + 1);
                                     }
                                     else
                                         alert("Error in commenting on post");
@@ -445,7 +463,7 @@ $(document).ready(function() {
 
                                     var like_span = $("<span style='white-space: nowrap;'></span>");
 
-                                    var like_button = $("<div class='meta' style='display: inline-block;'><a class='like'><i class='like icon red'></i></a></div>");
+                                    var like_button = $("<div class='meta' style='display: inline-block;'><a class='like'><i class='like icon red large'></i></a></div>");
                                     like_button.attr("id","like-button-" + _post.post.postID.toString());
 
                                     new_activity_label = $("<label style='display: inline-block;'></label>");
@@ -472,6 +490,21 @@ $(document).ready(function() {
                                     });
 
                                     like_span.append(like_button);
+                                    like_span.append(new_activity_label);
+
+                                    //comment icon
+                                    var comment_button = $("<div class='meta' style='display: inline-block; padding-left: 30px;'><a class='like'><i class='comment icon large'></i></a></div>");
+                                    comment_button.attr("id","comment-button-" + _post.post.postID.toString());
+
+                                    new_activity_label = $("<label style='display: inline-block;'></label>");
+                                    new_activity_label.text(_post.comments.length.toString());
+                                    new_activity_label.attr("id", "post-label-comment-g" + _post.post.postID.toString());
+
+                                    comment_button.click(function() {
+                                        comment_section.toggle();
+                                    });
+
+                                    like_span.append(comment_button);
                                     like_span.append(new_activity_label);
                                     $("#g-" + groupID + "-" + "post-div-" + _post.post.postID.toString()).append(like_span);
 
@@ -534,6 +567,7 @@ $(document).ready(function() {
 
                                     var comment_section = $("<comment-section></comment-section>");
                                     comment_section.attr("id", "g-" + groupID + "-comment-section-" + _post.post.postID.toString());
+                                    comment_section.hide();
                                     $("#g-" + groupID + "-" + "post-div-" + _post.post.postID.toString()).append(comment_section);
 
                                     var new_comment = $("<textarea></textarea>");
@@ -565,6 +599,7 @@ $(document).ready(function() {
                                                     document.getElementById("g-" + groupID + "-new-comment-" + _post.post.postID.toString()).value = "";
                                                     text_break = $("<br>");
                                                     $("#g-" + groupID + "-user-comments-" + _post.post.postID.toString()).append(text_break);
+                                                    $("#post-label-comment-g" + _post.post.postID.toString()).text(parseInt($("#post-label-comment-g" + _post.post.postID.toString()).text()) + 1);
                                                 }
                                                 else
                                                     alert("Error in commenting on post");
