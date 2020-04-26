@@ -371,12 +371,21 @@ $(document).ready(function() {
                                     var uname = "";
                                     let new_activity_label = $("<h2></h2>");
                                     uname = response;
-                                    new_activity_label.text(uname + " posted");
+                                    if(_post.post.activity.userID == userID){
+                                        new_activity_label.text("You Posted");
+                                    } else{
+                                        new_activity_label.text(uname + " Posted");
+                                    }
                                     new_activity_label.attr("id", "post-user");
                                     new_activity_label.attr("style", "margin: 0px 0px 0px 0px; padding: 0px 0px 0px 0px;");
                                     $("#g-" + groupID + "-" + "post-div-" + _post.post.postID.toString()).append(new_activity_label);
 
-                                    let summaryLink = $("<a href=\"#\">View " + uname + "\'s Activity Summary</a>");
+                                    let summaryLink = "";
+                                    if(_post.post.activity.userID == userID){
+                                        summaryLink = $("<a href=\"#\">View Your Activity Summary</a>");
+                                    } else{
+                                        summaryLink = $("<a href=\"#\">View " + uname + "\'s Activity Summary</a>");
+                                    }
                                     let summaryID = "summaryLink" + _post.post.activity.userID;
                                     summaryLink.attr("id", summaryID);
                                     $("#g-" + groupID + "-" + "post-div-" + _post.post.postID.toString()).append(summaryLink);
@@ -447,7 +456,11 @@ $(document).ready(function() {
                                            url: '/groupfeed/like-post?postID=' + _post.post.postID,
                                            method: 'PUT',
                                            success: function(val) {
-                                               alert("You liked " + uname + "'s post!");
+                                               if(_post.post.activity.userID == userID){
+                                                   alert("You liked your post!");
+                                               } else{
+                                                   alert("You liked " + uname + "'s post!");
+                                               }
                                                document.getElementById("post-label-likes-g"
                                                    + _post.post.postID.toString()).innerHTML = val.toString();
                                            },
