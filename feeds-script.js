@@ -237,7 +237,7 @@ $(document).ready(function() {
                         new_activity_label.attr("id", "post-label-comment-i" + _post.post.postID.toString());
 
                         comment_button.click(function() {
-                            comment_section.toggle();
+                            $("#comment-section-" + _post.post.postID.toString()).toggle();
                         });
 
                         like_span.append(comment_button);
@@ -501,7 +501,7 @@ $(document).ready(function() {
                                     new_activity_label.attr("id", "post-label-comment-g" + _post.post.postID.toString());
 
                                     comment_button.click(function() {
-                                        comment_section.toggle();
+                                        $("#g-" + groupID + "-comment-section-" + _post.post.postID.toString()).toggle();
                                     });
 
                                     like_span.append(comment_button);
