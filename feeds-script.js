@@ -733,14 +733,17 @@ $(document).ready(function() {
         const username_field = $("<input>");
         username_field.attr("type", "text");
         username_field.attr("id", "username-field");
+        username_field.attr("style", "margin: 0px 20px; font-size: 14pt;");
         // button to add user
         const add_user_button = $("<button></button>");
         add_user_button.attr("id", "add-user-button");
         add_user_button.attr("style", "margin-bottom: 10px;");
+        add_user_button.attr("class", "ui primary button");
         add_user_button.text("Add User");
         // button to delete user
         const delete_user_button = $("<button></button>");
         delete_user_button.attr("id", "delete-user-button");
+        delete_user_button.attr("class", "ui primary button");
         delete_user_button.text("Delete User");
         // put into body
         $("body").append(username_field, add_user_button, delete_user_button);
